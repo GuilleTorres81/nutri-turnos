@@ -42,7 +42,7 @@
         <div class="d-flex flex-column align-items-center mt-4">
             <h2>Solicita un turno</h2>
             <div id="calendar"></div>
-            <form action="" method="post">
+            <form action="" method="post" class="d-none">
                 {% csrf_token %}
                 
                 {{ form.as_p }}
@@ -55,6 +55,9 @@
 <!-- BOOTSTRAP -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 <!-- FULLCALENDAR -->
+<!-- <script src="{% static 'js/fullcalendar/index.global.min.js' %}"></script>
+<script src="{% static 'js/fullcalendar/core/package/index.global.min.js' %}"></script>
+<script src="{% static 'js/fullcalendar/daygrid/package/index.global.min.js' %}"></script> -->
 <script src="{% static 'js/fullcalendar.js' %}"></script>
 
 </html>

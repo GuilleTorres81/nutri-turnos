@@ -26,7 +26,6 @@ db.sqlite3
 
 # Media and static files (generated during deployment)
 media/
-static/
 
 # Sensitive information (use environment variables in production)
 local_settings.py
