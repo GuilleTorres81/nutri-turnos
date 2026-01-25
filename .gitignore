@@ -1,0 +1,40 @@
+# Python
+# Byte-compiled / optimized files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env/
+.venv/
+env/
+venv/
+ENV/
+bin/
+lib/
+include/
+
+# IDE-specific files (e.g., PyCharm, VS Code)
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Django-specific
+# Local database
+db.sqlite3
+*.sqlite3
+
+# Media and static files (generated during deployment)
+media/
+static/
+
+# Sensitive information (use environment variables in production)
+local_settings.py
+.env
+
+# Testing and coverage
+.coverage
+htmlcov/
+
+# Operating System files
+Thumbs.db # Windows

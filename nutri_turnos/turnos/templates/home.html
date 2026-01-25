@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrición Belén</title>
+        
+    <!-- BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <!-- FULLCALENDAR -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js'></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Nutrición Belén</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+    </nav>
+    <h1 class="text-center">Bienvenidos a la página de Nutrición Belén</h1>
+    <main class="d-flex justify-content-center gap-4">
+        <div class="mt-4 col-3">
+            <h2 class="text-center">TITULO</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum in molestiae veritatis? Impedit molestias officia nostrum sapiente est accusamus quam distinctio at nihil ad, molestiae culpa repudiandae ipsa eius odit?</p>
+        </div>
+        <div class="d-flex flex-column align-items-center mt-4">
+            <h2>Solicita un turno</h2>
+            <div id="calendar"></div>
+            <form action="" method="post">
+                {% csrf_token %}
+                
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Solicitar Turno</button>
+            </form>
+        </div>
+    </main>
+</body>
+    
+<!-- BOOTSTRAP -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<!-- FULLCALENDAR -->
+<script src="{% static 'js/fullcalendar.js' %}"></script>
+
+</html>
