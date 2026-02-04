@@ -6,7 +6,7 @@ from django.forms import ModelForm, DateTimeInput
 class TurnoForm(ModelForm):
     class Meta:
         model = Turno
-        fields = ['paciente', 'fecha_hora', 'motivo', 'estado']
+        fields = ['paciente', 'fecha', 'hora', 'motivo', 'estado']
         widgets = {
             'fecha_hora': DateTimeInput(attrs={'type': 'datetime-local'}),
         }

@@ -17,8 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
+from turnos import views
 
 urlpatterns = [
+    path('', views.turnos_home, name='turnos_home'),
     path('admin/', admin.site.urls),
-    path('turnos/', include('turnos.urls')),
 ]

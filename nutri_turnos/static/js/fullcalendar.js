@@ -1,20 +1,30 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const calendarEl = document.getElementById('calendar')
-
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    locale: 'es',
-    selectable: true,
-    dateClick: function (info) {
-      const selectedDate = info.dateStr
-      const dateInput = document.getElementById('id_fecha_turno')
-      dateInput.value = selectedDate
-      // Mostrar el formulario
-      const form = document.querySelector('form')
-      form.classList.remove('d-none')
-    },
+$(document).ready(function(){
     
-  })
+    optional_config = {
+        altInput: true,
+        altFormat: "j \\d\\e F \\d\\e Y",
+        dateFormat: "Y-m-d",
+        locale: "es",
+        defaultDate: "today",
+        inline: true,
+        onChange: function (selectedDates, dateStr, instance) {
+                let fecha = selectedDates[0];
 
-  calendar.render()
+                $.ajax({
+                    url: "/nutri_turnos/turnos_disponibles/",
+                    type: "GET",
+                    data: {
+                        'fecha': fecha
+                    },
+                    success: function (data) {
+                        $('#turnos').html(data);
+                    }
+                });
+            }
+    }
+
+    $("#calendar").flatpickr(optional_config);
+    $(".d-flex > .input").addClass("d-none");
+
 })
+
