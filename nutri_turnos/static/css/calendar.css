@@ -1,0 +1,22 @@
+
+.flatpickr-calendar {
+    background-color: #FCE4EC;
+}
+.flatpickr-months {
+    background-color: #F48FB1;
+    padding-bottom: 10px;
+}
+.flatpickr-day {
+    color: #4A4A4A;
+}
+.prevMonthDay,
+.nextMonthDay {
+    color: #4A4A4A;
+}
+.today,
+.flatpickr-current-month,
+.flatpickr-weekday,
+.flatpickr-prev-month,
+.flatpickr-next-month {
+    color: #4A4A4A;
+}

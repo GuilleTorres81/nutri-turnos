@@ -5,7 +5,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Nutrición Belén</title>
-
+        
         <!-- BOOTSTRAP -->
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -18,6 +18,8 @@
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
         />
+        <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/calendar.css' %}" />
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -44,84 +46,87 @@
                                 >Home</a
                             >
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Features</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Pricing</a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                class="nav-link disabled"
-                                href="#"
-                                tabindex="-1"
-                                aria-disabled="true"
-                                >Disabled</a
-                            >
-                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <h1 class="text-center">Bienvenidos a la página de Nutrición Belén</h1>
-        <main class="d-flex justify-content-center gap-4">
-            <div class="mt-4 col-3">
-                <h2 class="text-center">TITULO</h2>
-                <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                    in molestiae veritatis? Impedit molestias officia nostrum
-                    sapiente est accusamus quam distinctio at nihil ad,
-                    molestiae culpa repudiandae ipsa eius odit?
-                </p>
-            </div>
-            <div class="d-flex flex-column align-items-center mt-4">
-                <h2>Solicita un turno</h2>
-                <input type="date" id="calendar" class="custom-control" />
-                <div class="card">
-                    <div class="card-body">
-                        <form action="" method="post" class="">
-                            {% csrf_token %} 
-                            <input
-                                type="time"
-                                id="timepicker"
-                                class="form-control"
-                            />
-                            <label for="firts_name">Nombre</label>
-                            <input type="text" name="first_name" id="first_name" class="form-control 
-                            mb-2">
-                            <label for="last_name">Apellido</label>
-                            <input type="text" name="last_name" id="last_name" class="form-control
-                            mb-2">
-                            <label for="email">Email</label>
-                            <input type="email" name="email" id="email" class="form-control
-                            mb-2">
-                            <div>
-                                <input type="radio" name="location" id="location_1" value="consultorio" class="form-check-input">
-                                <label for="location_1">Consultorio</label>
+        <main class="d-flex justify-content-center">
+            <div class="d-flex flex-column align-items-center mt-4 col-3">
+                <h2>Consulta Nutricional</h2>
+                <div class="card rounded">
+                    <div class="card-body rounded">
+                        <span class="text-secondary fw-bold">Lic. María Belén Jeréz</span>
+                        <p>
+                            <h3>¡Bienvenido!</h3>
 
-                                <input type="radio" name="location" id="location_2" value="google_meet" class="form-check-input">
-                                <label for="location_2">Google Meet</label>
-                            </div>
-                            <div class="d-flex flex-column justify-content-center">
-                                <input type="radio" name="reason" id="reason_1" value="plan" class="form-check-input">
-                                <label for="reason_1">Plan alimentario</label>
+                            Aquí te dejo algunas cositas importantes a tener en cuenta:
 
-                                <input type="radio" name="reason" id="reason_2" value="antropometria" class="form-check-input">
-                                <label for="reason_2">Antropometría</label>
+                            <ul>
+                                <li><span>Si vas a realizarte mediciones Antropométricas, por favor asistir a la consulta con ropa cómoda ( Varones: short deportivo/ Mujeres: short deportivo o calza corta y top deportivo)</span></li>
+                                <li><span>Cualquier duda que tengas podés comunicarte al 387 4633270</span></li>
+                                <li><span>Rogamos puntualidad en la consulta.</span></li>
+                            </ul>
 
-                                <input type="radio" name="reason" id="reason_3" value="plan_y_antropometria" class="form-check-input">
-                                <label for="reason_3">Plan alimentario y Antropometría</label>
-
-                                <input type="radio" name="reason" id="reason_4" value="google_meet" class="form-check-input">
-                                <label for="reason_4">Otro: <input type="text" class="form-control"></label>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary">
-                                Solicitar Turno
-                            </button>
-                        </form>
+                            ¡Muchas gracias, nos vemos pronto!
+                        </p>
                     </div>
                 </div>
+            </div>
+            <div class="d-flex flex-column align-items-center mt-4 col-4">
+                <h2>Solicita un turno</h2>
+                <form id="turnoForm" action="" method="post" class="">
+                    <input type="date" id="calendar" class="custom-control" />
+                    <div class="card d-none" id="turnoCard">
+                        <div class="d-flex">
+                            <button id="backButton" class="btn btn-primary">
+                                <- Volver
+                            </button>
+                        </div>
+                        <div class="card-body">
+                                {% csrf_token %} 
+                                <input
+                                    type="time"
+                                    id="timepicker"
+                                    class="form-control"
+                                />
+                                <label for="firts_name">Nombre</label>
+                                <input type="text" name="first_name" id="first_name" class="form-control 
+                                mb-2">
+                                <label for="last_name">Apellido</label>
+                                <input type="text" name="last_name" id="last_name" class="form-control
+                                mb-2">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" id="email" class="form-control
+                                mb-2">
+                                <div>
+                                    <input type="radio" name="location" id="location_1" value="consultorio" class="form-check-input">
+                                    <label for="location_1">Consultorio</label>
+
+                                    <input type="radio" name="location" id="location_2" value="google_meet" class="form-check-input">
+                                    <label for="location_2">Google Meet</label>
+                                </div>
+                                <div class="d-flex flex-column justify-content-center mb-2">
+                                    <input type="radio" name="reason" id="reason_1" value="plan" class="form-check-input">
+                                    <label for="reason_1">Plan alimentario</label>
+
+                                    <input type="radio" name="reason" id="reason_2" value="antropometria" class="form-check-input">
+                                    <label for="reason_2">Antropometría</label>
+
+                                    <input type="radio" name="reason" id="reason_3" value="plan_y_antropometria" class="form-check-input">
+                                    <label for="reason_3">Plan alimentario y Antropometría</label>
+
+                                    <input type="radio" name="reason" id="reason_4" value="google_meet" class="form-check-input">
+                                    <label for="reason_4">Otro: <input type="text" class="form-control"></label>
+                                </div>
+                                
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-primary">
+                                        Solicitar Turno
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                </form>
             </div>
         </main>
     </body>
@@ -145,5 +150,5 @@
     <!-- FLATPICKR -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
-    <script src="{% static 'js/fullcalendar.js' %}"></script>
+    <script src="{% static 'js/calendar.js' %}"></script>
 </html>

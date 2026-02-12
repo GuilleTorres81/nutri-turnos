@@ -1,0 +1,17 @@
+body{
+    background-color: #F8BBD0 !important;
+    color: #4A4A4A !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5{
+    color: #fff;
+}
+
+.card,
+.card-body{
+    background-color: #FCE4EC;
+}
