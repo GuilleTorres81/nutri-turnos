@@ -1,15 +1,25 @@
+from datetime import datetime
 from django.db import models
 
 # Create your models here.
 class Turno(models.Model):
-    paciente = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100, default=None)
+    apellido = models.CharField(max_length=100, default=None)
+    email = models.EmailField(max_length=100, default=None)
     fecha = models.DateField()
     hora = models.TimeField()
-    motivo = models.TextField()
+    fecha_hora = models.DateTimeField(default=None)
+    encuentro = models.CharField(max_length=100, default=None)
+    motivo = models.CharField(max_length=100)
     estado = models.CharField(max_length=50, default='Pendiente')
 
     def __str__(self):
-        return f'Turno de {self.paciente} el {self.fecha_hora.strftime("%Y-%m-%d %H:%M")}'
+        return f'Turno: {self.nombre} {self.apellido} - {self.encuentro} el {self.fecha} a las {self.hora}'
+    
+    def save(self, *args, **kwargs):
+        # Combinar fecha y hora en fecha_hora antes de guardar
+        self.fecha_hora = datetime.combine(self.fecha, self.hora)
+        super().save(*args, **kwargs)
     
 class Horario(models.Model):
     dia_semana = models.CharField(max_length=20)

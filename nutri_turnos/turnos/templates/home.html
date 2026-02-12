@@ -1,57 +1,9 @@
-{% load static %}
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Nutrición Belén</title>
-        
-        <!-- BOOTSTRAP -->
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-            crossorigin="anonymous"
-        />
-        <!-- FLATPICKR -->
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-        />
-        <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-        <link rel="stylesheet" href="{% static 'css/calendar.css' %}" />
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Nutrición Belén</a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a
-                                class="nav-link active"
-                                aria-current="page"
-                                href="#"
-                                >Home</a
-                            >
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <main class="d-flex justify-content-center">
-            <div class="d-flex flex-column align-items-center mt-4 col-3">
+{% extends 'base.html' %}
+{% block title %}Registro de comidas{% endblock %}
+
+{% block content %}
+
+<div class="d-flex flex-column align-items-center mt-4 col-3">
                 <h2>Consulta Nutricional</h2>
                 <div class="card rounded">
                     <div class="card-body rounded">
@@ -74,8 +26,8 @@
             </div>
             <div class="d-flex flex-column align-items-center mt-4 col-4">
                 <h2>Solicita un turno</h2>
-                <form id="turnoForm" action="" method="post" class="">
-                    <input type="date" id="calendar" class="custom-control" />
+                <form id="turnoForm" action="{% url 'turnos:registrar_turno' %}" method="post" class="">
+                    <input type="date" id="calendar" class="custom-control" name="fecha" />
                     <div class="card d-none" id="turnoCard">
                         <div class="d-flex">
                             <button id="backButton" class="btn btn-primary">
@@ -88,35 +40,46 @@
                                     type="time"
                                     id="timepicker"
                                     class="form-control"
+                                    name="hora"
                                 />
-                                <label for="firts_name">Nombre</label>
-                                <input type="text" name="first_name" id="first_name" class="form-control 
+                                <label for="nombre">Nombre</label>
+                                <input type="text" name="nombre" id="nombre" class="form-control 
                                 mb-2">
-                                <label for="last_name">Apellido</label>
-                                <input type="text" name="last_name" id="last_name" class="form-control
+                                <label for="apellido">Apellido</label>
+                                <input type="text" name="apellido" id="apellido" class="form-control
                                 mb-2">
                                 <label for="email">Email</label>
                                 <input type="email" name="email" id="email" class="form-control
                                 mb-2">
                                 <div>
-                                    <input type="radio" name="location" id="location_1" value="consultorio" class="form-check-input">
-                                    <label for="location_1">Consultorio</label>
+                                    <h6 class="fw-bold">Lugar de encuentro</h6>
+                                    <input type="radio" name="encuentro" id="encuentro_1" value="consultorio" class="form-check-input">
+                                    <label for="encuentro_1">Consultorio</label>
 
-                                    <input type="radio" name="location" id="location_2" value="google_meet" class="form-check-input">
-                                    <label for="location_2">Google Meet</label>
+                                    <input type="radio" name="encuentro" id="encuentro_2" value="google_meet" class="form-check-input">
+                                    <label for="encuentro_2">Google Meet</label>
                                 </div>
                                 <div class="d-flex flex-column justify-content-center mb-2">
-                                    <input type="radio" name="reason" id="reason_1" value="plan" class="form-check-input">
-                                    <label for="reason_1">Plan alimentario</label>
+                                    <h6 class="fw-bold">Motivo de consulta</h6>
+                                    <div>
+                                        <input type="radio" name="motivo" id="motivo_1" value="plan" class="form-check-input">
+                                        <label for="motivo_1">Plan alimentario</label>
+                                    </div>
 
-                                    <input type="radio" name="reason" id="reason_2" value="antropometria" class="form-check-input">
-                                    <label for="reason_2">Antropometría</label>
+                                    <div>
+                                        <input type="radio" name="motivo" id="motivo_2" value="antropometria" class="form-check-input">
+                                        <label for="motivo_2">Antropometría</label>
+                                    </div>
 
-                                    <input type="radio" name="reason" id="reason_3" value="plan_y_antropometria" class="form-check-input">
-                                    <label for="reason_3">Plan alimentario y Antropometría</label>
+                                    <div>
+                                        <input type="radio" name="motivo" id="motivo_3" value="plan_y_antropometria" class="form-check-input">
+                                        <label for="motivo_3">Plan alimentario y Antropometría</label>
+                                    </div>
 
-                                    <input type="radio" name="reason" id="reason_4" value="google_meet" class="form-check-input">
-                                    <label for="reason_4">Otro: <input type="text" class="form-control"></label>
+                                    <div>
+                                        <input type="radio" name="motivo" id="motivo_4" value="otro" class="form-check-input">
+                                        <label for="motivo_4">Otro: <input type="text" class="form-control"></label>
+                                    </div>
                                 </div>
                                 
                                 <div class="d-flex justify-content-center">
@@ -128,27 +91,6 @@
                         </div>
                 </form>
             </div>
-        </main>
-    </body>
+{% endblock %}
 
-    <!-- JQUERY -->
-    <script
-        src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-        crossorigin="anonymous"
-    ></script>
-    <!-- BOOTSTRAP -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"
-    ></script>
-    <!-- FULLCALENDAR -->
-    <!-- <script src="{% static 'js/fullcalendar/index.global.min.js' %}"></script>
-<script src="{% static 'js/fullcalendar/core/package/index.global.min.js' %}"></script>
-<script src="{% static 'js/fullcalendar/daygrid/package/index.global.min.js' %}"></script> -->
-    <!-- FLATPICKR -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
-    <script src="{% static 'js/calendar.js' %}"></script>
-</html>
+

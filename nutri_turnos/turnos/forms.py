@@ -3,10 +3,11 @@ from .models import Turno
 from django.contrib.auth.models import User
 from django.forms import ModelForm, DateTimeInput
 
-class TurnoForm(ModelForm):
+class TurnoForm(forms.ModelForm):
     class Meta:
         model = Turno
-        fields = ['paciente', 'fecha', 'hora', 'motivo', 'estado']
+        fields = ['nombre', 'apellido', 'fecha', 'hora', 'encuentro', 'motivo']
         widgets = {
-            'fecha_hora': DateTimeInput(attrs={'type': 'datetime-local'}),
+            'fecha': forms.DateInput(attrs={'type': 'date'}),
+            'hora': forms.TimeInput(attrs={'type': 'time'}),
         }

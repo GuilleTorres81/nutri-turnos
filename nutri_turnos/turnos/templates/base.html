@@ -1,0 +1,85 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Nutrición Belén</title>
+        
+        <!-- BOOTSTRAP -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"
+        />
+        <!-- FLATPICKR -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+        />
+        <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/calendar.css' %}" />
+        {% block styles %}
+    
+        {% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Nutrición Belén</a>
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a
+                                class="nav-link active"
+                                aria-current="page"
+                                href="#"
+                                >Home</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <main class="d-flex justify-content-center">
+            {% block content %}
+            {% endblock %}
+        </main>
+        <footer class="mt-4">
+            <div class="d-flex justify-content-center align-items-end h-100">
+                
+            </div>
+        </footer>
+    </body>
+    <!-- JQUERY -->
+    <script
+        src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous"
+    ></script>
+    <!-- BOOTSTRAP -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"
+    ></script>
+    <!-- FLATPICKR -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+    <script src="{% static 'js/calendar.js' %}"></script>
+    {% block scripts %}
+
+    {% endblock %}
+</html>
