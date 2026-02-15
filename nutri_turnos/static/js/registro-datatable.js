@@ -32,7 +32,7 @@ $(document).ready(function () {
             data: function (d) {
                 // d.comida = $("#filtroComida").val();
                 // d.casino = $("#filtroCasino").val();
-                // d.fecha = $("#filtroFecha").val();
+                d.fecha = $("#filtroFecha").val();
             },
             dataSrc: "data", // nombre del campo que contiene la lista de alarmas
         },
@@ -41,27 +41,12 @@ $(document).ready(function () {
             // { responsivePriority: 2, targets: [0, 1, 2] }, // los demás se ocultan primero
         ],
         columns: [
-            {
-                data: "fecha_hora",
-                render: function (data, type, row) {
-                    const date = new Date(data);
-                    const options = {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    };
-                    return date
-                        .toLocaleDateString("es-ES", options)
-                        .replace(",", "");
-                },
-            },
+            { data: "fecha_hora"},
             { data: "apellido" },
             { data: "nombre" },
             { data: "email" },
-            { data: "encuentro" },
             { data: "motivo" },
+            { data: "encuentro" },
         ],
         language: {
             decimal: "",
@@ -89,7 +74,7 @@ $(document).ready(function () {
     });
 
     $('.dt-search').addClass('mt-2 mb-1');
-    $('.dt-search input').addClass('rounded col-md-3 col-12 border-light');
+    $('.dt-search input').addClass('rounded col-md-3 col-12 border-light bg-white');
     $(".dt-info").addClass("text-center");
     $(".dt-paging").addClass("d-flex justify-content-center");
     $(".dt-buttons").addClass("d-flex align-items-center justify-content-center gap-2");

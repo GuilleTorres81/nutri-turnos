@@ -1,7 +1,17 @@
 from datetime import datetime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+
+from django.db.models import Q, F
+from django.http import JsonResponse
+
 from .forms import TurnoForm
 from .models import Turno
+
+
+
+
 def turnos_home(request):
     form = TurnoForm()
     context = {'form': form}
@@ -24,8 +34,91 @@ def registrar_turno(request):
             
             turno = Turno(nombre=nombre, apellido=apellido, email=email, fecha=fecha, hora=hora, encuentro=encuentro, motivo=motivo)
             turno.save()
-            return render(request, 'home.html', {'success': 'Turno registrado exitosamente'})
+            return redirect('turnos_home')
         except Exception as e:
             print(f'Error al registrar el turno: {e}')
-            return render(request, 'home.html', {'error': 'Error al registrar el turno'})
-    return render(request, 'home.html')
+            return redirect('turnos_home')
+    return redirect('turnos_home')
+
+
+# region REGISTROS
+
+@login_required(login_url='login')  # redirige al login si no está autenticado    
+def registro_de_turnos(request):
+    usuario=request.user        
+    return render(request,"registro.html")
+
+def registro_datatable(request):
+    draw = request.GET.get('draw')
+    start = int(request.GET.get('start', 0))
+    length = int(request.GET.get('length', 10))
+    order_column_index = int(request.GET.get('order[0][column]', 0))
+    order_direction = request.GET.get('order[0][dir]', 'asc')
+    search_value = request.GET.get('search[value]', None)
+
+    # filtro_comida = request.GET.get('comida')
+    # filtro_casino = request.GET.get('casino')
+    filtro_fecha  = request.GET.get('fecha')
+
+    # Mapeo de índices a columnas del datatable
+    column_mapping = {
+        0: 'fecha_hora', 
+        1: 'apellido', 
+        2: 'nombre', 
+        3: 'email', 
+        4: 'motivo', 
+        5: 'encuentro',
+    }
+
+    order_column = column_mapping.get(order_column_index, 'apellido')
+    if order_direction == 'desc':
+        order_column = F(order_column).asc(nulls_last=True)
+    else:
+        order_column = F(order_column).desc(nulls_last=True)
+
+    # Construimos dinámicamente las condiciones de búsqueda utilizando Q objects
+    conditions = Q()
+    if search_value:
+        fields = [
+            'apellido',
+            'nombre',
+            'email',
+        ]
+        search_terms = search_value.split()
+        for term in search_terms:
+            term_conditions = Q()
+            for field in fields:
+                term_conditions |= Q(**{f"{field}__icontains": term})
+
+            conditions &= term_conditions
+
+    filtered_data = Turno.objects.filter(conditions)
+    
+    # Aplicamos filtros dinámicos
+    # if filtro_comida:
+    #     filtered_data = filtered_data.filter(comida=filtro_comida)
+    # if filtro_casino:
+    #     filtered_data = filtered_data.filter(casino=filtro_casino)
+    if filtro_fecha:
+        try:
+            fecha_obj = datetime.strptime(filtro_fecha, "%Y-%m-%d").date()
+            filtered_data = filtered_data.filter(fecha_hora__date=fecha_obj)
+        except ValueError:
+            print("Formato de fecha inválido:", filtro_fecha)    
+    
+        
+    filtered_data = filtered_data.order_by(order_column)
+    total_records = filtered_data.count()
+
+    # Paginación
+    data = [
+        item.to_json()
+        for item in filtered_data[start: start + length]
+    ]   
+
+    return JsonResponse({
+        'draw': draw,
+        'recordsTotal': total_records,
+        'recordsFiltered': total_records,
+        'data': data
+    })

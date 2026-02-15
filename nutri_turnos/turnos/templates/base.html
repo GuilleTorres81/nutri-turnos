@@ -20,14 +20,14 @@
         />
         <link rel="stylesheet" href="{% static 'css/base.css' %}" />
         <link rel="stylesheet" href="{% static 'css/calendar.css' %}" />
+
         {% block styles %}
-    
         {% endblock %}
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Nutrición Belén</a>
+                <a class="navbar-brand" href="{% url 'turnos_home' %}">Nutrición Belén</a>
                 <button
                     class="navbar-toggler"
                     type="button"
@@ -45,19 +45,17 @@
                             <a
                                 class="nav-link active"
                                 aria-current="page"
-                                href="#"
-                                >Home</a
+                                href="{% url 'turnos:registro' %}"
+                                >Registro de Turnos</a
                             >
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <main class="d-flex justify-content-center">
             {% block content %}
             {% endblock %}
-        </main>
-        <footer class="mt-4">
+        <footer class="mt-4 d-none">
             <div class="d-flex justify-content-center align-items-end h-100">
                 
             </div>
@@ -78,8 +76,8 @@
     <!-- FLATPICKR -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
-    <script src="{% static 'js/calendar.js' %}"></script>
-    {% block scripts %}
 
+
+    {% block scripts %}
     {% endblock %}
 </html>

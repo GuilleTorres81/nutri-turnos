@@ -1,0 +1,38 @@
+
+#registroTable {
+    color: #9da67a;
+    background-color: #213726;
+}
+
+/* Estilo base (similar a .form-control de Bootstrap) */
+.custom-control {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 2.25rem 0.5rem 0.75rem; /* espacio a derecha para el chevron */
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #9da67a; /* texto */
+    background-color: #213726; /* fondo */
+    background-clip: padding-box;
+    border: 1px solid #ced4da; /* borde */
+    border-radius: 0.375rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    cursor: pointer;
+}
+
+.custom-control:hover {
+    border-color: #9da67a;
+}
+
+/* Focus */
+.custom-control:focus {
+    color: #9da67a;
+    background-color: #213726;
+    border-color: #86b7fe; /* borde azul */
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25); /* glow */
+}
+.custom-control::-webkit-calendar-picker-indicator {
+    filter: invert(30%) sepia(60%) saturate(500%) hue-rotate(180deg);
+    cursor: pointer;
+}

@@ -20,6 +20,17 @@ class Turno(models.Model):
         # Combinar fecha y hora en fecha_hora antes de guardar
         self.fecha_hora = datetime.combine(self.fecha, self.hora)
         super().save(*args, **kwargs)
+        
+    def to_json(self):
+        return {
+            'id': self.id,
+            'fecha_hora': self.fecha_hora.strftime('%d/%m/%Y %H:%M'),
+            'nombre': self.nombre,
+            'apellido': self.apellido,
+            'email': self.email,
+            'motivo': self.motivo,
+            'encuentro': self.encuentro,
+        }
     
 class Horario(models.Model):
     dia_semana = models.CharField(max_length=20)

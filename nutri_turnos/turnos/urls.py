@@ -1,8 +1,10 @@
 from django.urls import path
-from . import views
+from .views import *
 
 app_name = "turnos"
 
 urlpatterns = [
-    path('guardar-turno/', views.registrar_turno, name='registrar_turno'),
+    path("", registro_de_turnos, name="registro"),
+    path('guardar-turno/', registrar_turno, name='registrar_turno'),
+    path('datatable/', registro_datatable, name='datatable'),
 ]
