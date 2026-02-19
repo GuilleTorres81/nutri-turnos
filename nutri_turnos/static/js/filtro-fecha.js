@@ -3,8 +3,20 @@ $(document).ready(function(){
         altInput: true,
         altFormat: "j \\d\\e F \\d\\e Y",
         dateFormat: "Y-m-d",
-        locale: "es",
+        locale: {
+            ...flatpickr.l10ns.es,
+            firstDayOfWeek: 0
+        },
         defaultDate: "today",
+        disable: [
+            function(date) {
+            return (
+                    date.getDay() === 0 || // domingo
+                    date.getDay() === 6  // sábado
+
+                );
+            }
+        ],
         onChange: function (selectedDates, dateStr, instance) {
                 let fecha = selectedDates[0];
                 // $.ajax({

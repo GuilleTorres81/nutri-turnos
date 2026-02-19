@@ -44,7 +44,24 @@ $(document).ready(function () {
             { data: "fecha_hora"},
             { data: "apellido" },
             { data: "nombre" },
+            { data: "edad" },
+            { data: 
+                "telefono",
+                render: function (data, type, row) {
+                    return `<a href="https://wa.me/${data}" target="_blank">${data}</a>`;
+                }
+            },
             { data: "email" },
+            { data: 
+                "ciudad",
+                render: function (data, type, row) {
+                    if (data === "Tartagal") {
+                        return `<span class="badge bg-success">${data}</span>`;
+                    }else if (data === "Salta") {
+                        return `<span class="badge bg-warning">${data}</span>`;
+                    }
+                }
+            },
             { data: "motivo" },
             { data: "encuentro" },
         ],

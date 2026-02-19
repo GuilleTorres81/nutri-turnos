@@ -81,19 +81,25 @@
         <div class="d-flex flex-column align-items-center mt-4 col-4">
             <h2>Solicita un turno</h2>
             <form id="turnoForm" action="{% url 'turnos:registrar_turno' %}" method="post" class="">
+                {% csrf_token %} 
+                <div id="ciudaddDiv" class="d-flex col-12 mb-3 justify-content-around gap-2">
+                    <div class="d-flex">
+                        <label for="ciudad_1" class="btn btn-primary">Salta</label>
+                        <input type="radio" name="ciudad" id="ciudad_1" value="Salta" class="ciudadChecker d-none" checked>
+                    </div>
+                    <div class="d-flex">
+                        <label for="ciudad_2" class="btn btn-primary">Tartagal</label>
+                        <input type="radio" name="ciudad" id="ciudad_2" value="Tartagal" class="ciudadChecker d-none">
+                    </div>
+                </div>
                 <input type="date" id="calendar" class="custom-control" name="fecha" />
                 <div class="card d-none" id="turnoCard">
-                    <div class="d-flex">
-                        <button id="backButton" class="btn btn-primary">
-                            <- Volver
-                        </button>
-                    </div>
                     <div class="card-body">
-                            {% csrf_token %} 
+                            
                             <input
                                 type="time"
-                                id="timepicker"
-                                class="form-control"
+                                id="horaSeleccionada"
+                                class="d-none"
                                 name="hora"
                             />
                             <label for="nombre">Nombre</label>
@@ -105,13 +111,25 @@
                             <label for="email">Email</label>
                             <input type="email" name="email" id="email" class="form-control
                             mb-2">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" name="telefono" id="telefono" class="form-control
+                            mb-2">
+                            <label for="edad">Edad</label>
+                            <input type="number" name="edad" id="edad" class="form-control
+                            mb-2" min="0" max="100">
                             <div>
                                 <h6 class="fw-bold">Lugar de encuentro</h6>
-                                <input type="radio" name="encuentro" id="encuentro_1" value="Consultorio" class="form-check-input">
-                                <label for="encuentro_1">Consultorio</label>
-
-                                <input type="radio" name="encuentro" id="encuentro_2" value="Google Meet" class="form-check-input">
-                                <label for="encuentro_2">Google Meet</label>
+                                <div class="d-flex gap-2">
+                                    <div id="googleMeetDiv">    
+                                        <input type="radio" name="encuentro" id="encuentro_2" value="Google Meet" class="form-check-input" checked>
+                                        <label for="encuentro_2">Google Meet</label>
+                                    </div>
+                                    
+                                    <div id="consultorioDiv" class="d-none">
+                                        <input type="radio" name="encuentro" id="encuentro_1" value="Consultorio" class="form-check-input">
+                                        <label for="encuentro_1">Consultorio</label>
+                                    </div>
+                                </div>
                             </div>
                             <div class="d-flex flex-column justify-content-center mb-2">
                                 <h6 class="fw-bold">Motivo de consulta</h6>
@@ -137,6 +155,9 @@
                             </div>
                             
                             <div class="d-flex justify-content-center">
+                                <button id="backButton" class="btn btn-secondary me-2">
+                                    Cancelar
+                                </button>
                                 <button type="submit" class="btn btn-primary">
                                     Solicitar Turno
                                 </button>
@@ -146,6 +167,40 @@
             </form>
         </div>
     </main>
+
+    <!-- MODAL DE TURNOS -->
+    <div class="modal" tabindex="-1" id="modalHoraios">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Horarios disponibles</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row gap-2">
+                    {% for horario in horarios_disponibles  %}
+                        <div class="col-auto">
+                            <label for="horario_{{ forloop.counter }}" 
+                                class="btn btn-primary botonHorario"
+                                data-hora="{{ horario|time:'H:i' }}">
+                                {{ horario|time:"H:i" }}
+                            </label>
+
+                            <input type="radio"
+                                name="horario"
+                                id="horario_{{ forloop.counter }}"
+                                value="{{ horario|time:'H:i' }}"
+                                class="d-none">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="botonCerrarModal">Confirmar Horario</button>
+            </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 

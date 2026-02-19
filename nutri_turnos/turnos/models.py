@@ -1,4 +1,7 @@
 from datetime import datetime
+from django.utils import timezone
+from django.utils.timezone import localtime
+
 from django.db import models
 
 # Create your models here.
@@ -6,6 +9,10 @@ class Turno(models.Model):
     nombre = models.CharField(max_length=100, default=None)
     apellido = models.CharField(max_length=100, default=None)
     email = models.EmailField(max_length=100, default=None)
+    telefono = models.CharField(max_length=20, default=None)
+    edad = models.IntegerField(default=None)
+    obra_social = models.CharField(max_length=100, default=None, null=True, blank=True)
+    ciudad = models.CharField(max_length=100, default=None)
     fecha = models.DateField()
     hora = models.TimeField()
     fecha_hora = models.DateTimeField(default=None)
@@ -17,17 +24,30 @@ class Turno(models.Model):
         return f'Turno: {self.nombre} {self.apellido} - {self.encuentro} el {self.fecha} a las {self.hora}'
     
     def save(self, *args, **kwargs):
-        # Combinar fecha y hora en fecha_hora antes de guardar
-        self.fecha_hora = datetime.combine(self.fecha, self.hora)
+        naive_datetime = datetime.combine(self.fecha, self.hora)
+
+        aware_datetime = timezone.make_aware(
+            naive_datetime,
+            timezone.get_current_timezone()
+        )
+
+        self.fecha_hora = aware_datetime
+
         super().save(*args, **kwargs)
         
     def to_json(self):
+        fecha_local = localtime(self.fecha_hora)
+        
         return {
             'id': self.id,
-            'fecha_hora': self.fecha_hora.strftime('%d/%m/%Y %H:%M'),
+            'fecha_hora': fecha_local.strftime('%d/%m/%Y %H:%M'),
             'nombre': self.nombre,
             'apellido': self.apellido,
             'email': self.email,
+            'telefono': self.telefono,
+            'edad': self.edad,
+            'ciudad': self.ciudad,
+            'obra_social': self.obra_social,
             'motivo': self.motivo,
             'encuentro': self.encuentro,
         }
@@ -41,8 +61,7 @@ class Horario(models.Model):
         return f'Horario: {self.dia_semana} de {self.hora_apertura.strftime("%H:%M")} a {self.hora_cierre.strftime("%H:%M")}'
     
 class ConfiguracionTurnos(models.Model):
-    duracion_turno = models.IntegerField(help_text='Duración del turno en minutos', default=60)
-    tiempo_entre_turnos = models.IntegerField(help_text='Tiempo entre turnos en minutos', default=60)
+    tiempo_entre_turnos = models.DurationField()
 
     def __str__(self):
-        return f'Configuración: Duración {self.duracion_turno} min, Tiempo entre turnos {self.tiempo_entre_turnos} min'
+        return f'Tiempo entre turnos {self.tiempo_entre_turnos} min'
