@@ -15,3 +15,8 @@ h5{
 .card-body{
     background-color: #FCE4EC;
 }
+
+.btn-primary {
+    background-color: #FFB7A5;
+    border-color: #FFF4F1;
+}

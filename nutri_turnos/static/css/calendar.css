@@ -1,6 +1,6 @@
 
 .flatpickr-calendar {
-    background-color: #FCE4EC;
+    background-color: #FFE3DC;
 }
 .flatpickr-months {
     background-color: #F48FB1;
@@ -9,14 +9,49 @@
 .flatpickr-day {
     color: #4A4A4A;
 }
-.prevMonthDay,
-.nextMonthDay {
-    color: #4A4A4A;
-}
-.today,
+
+
 .flatpickr-current-month,
 .flatpickr-weekday,
 .flatpickr-prev-month,
 .flatpickr-next-month {
-    color: #4A4A4A;
+    color: #4B3F3C;
+}
+
+.flatpickr-day.today{
+    border-color: transparent;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.nextMonthDay.selected,
+.flatpickr-day.prevMonthDay.selected{
+    background-color: #F48FB1;
+    color: #FCE4EC;
+    border-color: #FCE4EC;
+}
+
+.flatpickr-day.today.flatpickr-disabled{
+    border-color: transparent;
+}
+
+/* .flatpickr-day.nextMonthDay{
+    color: #FFB7A5;
+} */
+
+.flatpickr-day:hover,
+.flatpickr-day.today:hover,
+.flatpickr-day.selected:hover,
+.flatpickr-day.prevMonthDay:hover,
+.flatpickr-day.nextMonthDay:hover{
+    background-color: #F48FB1;
+    color: #FCE4EC;
+    border-color: #FCE4EC;
+}
+
+.flatpickr-day.today.flatpickr-disabled:hover,
+.flatpickr-day.prevMonthDay.flatpickr-disabled:hover,
+.flatpickr-day.nextMonthDay.flatpickr-disabled:hover{
+    background-color: transparent;
+    color: #3939391a;
+    border-color: transparent;
 }

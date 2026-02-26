@@ -36,7 +36,7 @@ a:hover {
 /* Styles for the hero image */
 .hero {
   /* Photo by mnm.all on Unsplash */
-  background: url('https://images.unsplash.com/photo-1518176258769-f227c798150e') center;
+  background: url('https://thumbs.dreamstime.com/b/productos-de-prote%C3%ADna-para-la-dieta-cetog%C3%A9nica-y-aventuras-sobre-un-fondo-madera-con-espacio-texto-431858787.jpg') center top;
   background-size: cover;
   padding: 4rem 2rem;
   /* grid styles */
@@ -50,8 +50,9 @@ a:hover {
 }
 
 .hero > h1 {
-  font-size: 4rem;
+  font-size: 3.5rem;
   padding-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,.7);
 }
 
 .hero > article > p {
