@@ -1,4 +1,7 @@
 from datetime import datetime
+from django.http import JsonResponse
+from .models import Feriado
+
 
 def calcular_horarios_disponibles(horarios, tiempo_entre_turnos):
     horarios_disponibles = []

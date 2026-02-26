@@ -92,7 +92,7 @@
                         <input type="radio" name="ciudad" id="ciudad_2" value="Tartagal" class="ciudadChecker d-none">
                     </div>
                 </div>
-                <input type="date" id="calendar" class="custom-control" name="fecha" />
+                <input type="date" id="calendar" class="custom-control" name="fecha" data-feriados-url="{% url 'turnos:get_feriados' %}"/>
                 <div class="card d-none" id="turnoCard">
                     <div class="card-body">
                             

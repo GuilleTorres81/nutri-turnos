@@ -65,3 +65,9 @@ class ConfiguracionTurnos(models.Model):
 
     def __str__(self):
         return f'Tiempo entre turnos {self.tiempo_entre_turnos} min'
+    
+class Feriado(models.Model):
+    fecha = models.DateField()
+
+    def __str__(self):
+        return f'Feriado: El {self.fecha.strftime("%d/%m/%Y")}'

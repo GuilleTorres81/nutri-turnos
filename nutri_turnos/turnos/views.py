@@ -138,3 +138,25 @@ def registro_datatable(request):
         'recordsFiltered': total_records,
         'data': data
     })
+    
+# region PETICIONES AJAX
+def get_feriados_ajax(request):
+    if request.method == 'GET':
+        feriados = Feriado.objects.all()
+        fechas_feriados = [feriado.fecha.strftime('%Y-%m-%d') for feriado in feriados]
+        return JsonResponse({'fechas_feriados': fechas_feriados})
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
+def get_turnos_ajax(request):
+    # Solo se devuelven los turnos del dia seleccionado
+    if request.method == 'GET':
+        fecha_str = request.GET.get('fecha')
+        try:
+            fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
+            turnos = Turno.objects.filter(fecha_hora__date=fecha)
+            turnos_data = [turno.to_json() for turno in turnos]
+            return JsonResponse({'turnos': turnos_data})
+        except ValueError:
+            return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
+    

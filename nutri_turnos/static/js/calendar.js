@@ -1,5 +1,4 @@
 let calendar;
-
 $(document).ready(function(){
     optional_config = {
         altInput: true,
@@ -12,16 +11,6 @@ $(document).ready(function(){
         },
         defaultDate: "today",
         inline: true,
-        disable: [
-            function(date) {
-            // 0 = Domingo, 6 = Sábado
-            return (
-                    date.getDay() === 0 || // domingo
-                    date.getDay() === 6 || // sábado
-                    date.getDay() === 1    // lunes
-                );
-            }
-        ],
         onChange: function (selectedDates, dateStr, instance) {
                 let fecha = selectedDates[0];
                 $('#modalHoraios').modal('show');
@@ -41,8 +30,55 @@ $(document).ready(function(){
     calendar = $("#calendar").flatpickr(optional_config);
     $("#turnoForm > .input").addClass("d-none");
     $('.flatpickr-months').addClass('rounded');
+    
+    let ciudadInicial = $('.ciudadChecker:checked').val();
+    actualizarDisponibilidad(ciudadInicial);
 })
 
+// FUNCIONES
+function actualizarDisponibilidad(ciudad) {
+    setFeriados().done(function (data) {
+
+        let reglas = [];
+        let feriados = data.fechas_feriados;
+
+        // Deshabilitar feriados
+        reglas.push(...feriados);
+
+        // Reglas según ciudad
+        if (ciudad === 'Salta') {
+            reglas.push(function (date) {
+                return (
+                    date.getDay() === 0 ||
+                    date.getDay() === 6 ||
+                    date.getDay() === 1
+                );
+            });
+
+            $('#consultorioDiv').addClass('d-none');
+            $('#googleMeetDiv > input').prop('checked', true);
+
+        } else if (ciudad === 'Tartagal') {
+            reglas.push(function (date) {
+                return !(date.getDay() === 1);
+            });
+
+            $('#consultorioDiv').removeClass('d-none');
+        }
+
+        calendar.set('disable', reglas);
+    });
+}
+
+function setFeriados() {
+    let url = $('#calendar').data('feriados-url');
+    return $.ajax({
+        url: url,
+        type: "GET"
+    });
+}
+
+// EVENTOS
 $('#backButton').click(function(e){
     e.preventDefault();
     $('#turnoCard').addClass('d-none');
@@ -65,27 +101,7 @@ $('#inputOtro').change(function(){
 
 $('.ciudadChecker').change(function () {
     let ciudadSeleccionada = $(this).val();
-
-    if (ciudadSeleccionada === 'Salta') {
-        calendar.set('disable', [
-            function (date) {
-                return (
-                    date.getDay() === 0 || // domingo
-                    date.getDay() === 6 || // sábado
-                    date.getDay() === 1    // lunes
-                );
-            }
-        ]);
-        $('#consultorioDiv').addClass('d-none');
-        $('#googleMeetDiv > input').prop('checked', true);
-    } else if (ciudadSeleccionada === 'Tartagal') {
-        calendar.set('disable', [
-            function (date) {
-                return !(date.getDay() === 1);
-            }
-        ]);
-        $('#consultorioDiv').removeClass('d-none');
-    }
+    actualizarDisponibilidad(ciudadSeleccionada);
 });
 
 $('.botonHorario').click(function () {
