@@ -16,7 +16,62 @@ h5{
     background-color: #FCE4EC;
 }
 
+.modal-header{
+    background-color: #F48FB1;
+}
+
+.modal-body{
+    background-color: #FCE4EC;
+}
+
+.modal-footer{
+    background-color: #FCE4EC;
+    border-top: transparent;
+}
+
 .btn-primary {
     background-color: #FFB7A5;
     border-color: #FFF4F1;
+}
+
+.btn-primary:hover {
+    background-color: #FFF4F1;
+    border-color: #FFB7A5;
+    color: #FFB7A5;
+}
+
+.btn-primary:active:focus {
+    background-color: #FFF4F1;
+    border-color: #FFB7A5;
+    color: #FFB7A5;
+}
+
+.ciudadChecker:checked + .btn-ciudad {
+    background-color: #FFB7A5;
+    border-color: #FFF4F1;
+    color: #FFF4F1;
+}
+
+.btn-white{
+    background-color: #FFF4F1;
+    border-color: #FFB7A5;
+    color: #FFB7A5;
+}
+
+.btn-white:hover{
+    background-color: #FFB7A5;
+    border-color: #FFF4F1;
+    color: #FFF4F1;
+}
+
+.btn-white:active:focus {
+    background-color: #FFB7A5;
+    border-color: #FFF4F1;
+    color: #FFF4F1;
+}
+
+.btn-white.active{
+    background-color: #FFB7A5;
+    border-color: #FFF4F1;
+    color: #FFF4F1;
 }

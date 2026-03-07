@@ -78,23 +78,28 @@
                 </div>
             </div>
         </div>
+
         <div class="d-flex flex-column align-items-center mt-4 col-4">
             <h2>Solicita un turno</h2>
             <form id="turnoForm" action="{% url 'turnos:registrar_turno' %}" method="post" class="">
                 {% csrf_token %} 
-                <div id="ciudaddDiv" class="d-flex col-12 mb-3 justify-content-around gap-2">
-                    <div class="d-flex">
-                        <label for="ciudad_1" class="btn btn-primary">Salta</label>
-                        <input type="radio" name="ciudad" id="ciudad_1" value="Salta" class="ciudadChecker d-none" checked>
-                    </div>
-                    <div class="d-flex">
-                        <label for="ciudad_2" class="btn btn-primary">Tartagal</label>
-                        <input type="radio" name="ciudad" id="ciudad_2" value="Tartagal" class="ciudadChecker d-none">
+                <div class="card rounded" id="calendarCard">
+                    <div class="card-body rounded" id="calendarCardBody">
+                        <div class="d-flex col-12 mb-3 justify-content-around gap-2">
+                            <div class="d-flex">
+                                <input type="radio" name="ciudad" id="ciudad_1" value="Salta" class="ciudadChecker d-none" checked>
+                                <label for="ciudad_1" class="btn btn-white btn-ciudad">Salta</label>
+                            </div>
+                            <div class="d-flex">
+                                <input type="radio" name="ciudad" id="ciudad_2" value="Tartagal" class="ciudadChecker d-none">
+                                <label for="ciudad_2" class="btn btn-white btn-ciudad">Tartagal</label>
+                            </div>
+                        </div>
+                        <input type="date" id="calendar" class="custom-control" name="fecha" data-feriados-url="{% url 'turnos:get_feriados' %}" data-horarios-url="{% url 'turnos:get_turnos' %}"/>
                     </div>
                 </div>
-                <input type="date" id="calendar" class="custom-control" name="fecha" data-feriados-url="{% url 'turnos:get_feriados' %}"/>
-                <div class="card d-none" id="turnoCard">
-                    <div class="card-body">
+                <div class="card rounded d-none" id="turnoCard">
+                    <div class="card-body rounded">
                             
                             <input
                                 type="time"
@@ -177,26 +182,17 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row gap-2">
-                    {% for horario in horarios_disponibles  %}
-                        <div class="col-auto">
-                            <label for="horario_{{ forloop.counter }}" 
-                                class="btn btn-primary botonHorario"
-                                data-hora="{{ horario|time:'H:i' }}">
-                                {{ horario|time:"H:i" }}
-                            </label>
-
-                            <input type="radio"
-                                name="horario"
-                                id="horario_{{ forloop.counter }}"
-                                value="{{ horario|time:'H:i' }}"
-                                class="d-none">
-                        </div>
-                    {% endfor %}
+                <div class="row gap-2" id="horariosDisponibles">
+                    
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="botonCerrarModal">Confirmar Horario</button>
+            <div class="modal-footer d-flex justify-content-between">
+                <div>
+                    <span id="spanWarning" class="text-danger d-none">Debe seleccionar un horario</span>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary" id="botonConfirmarHorario">Confirmar Horario</button>
+                </div>
             </div>
             </div>
         </div>

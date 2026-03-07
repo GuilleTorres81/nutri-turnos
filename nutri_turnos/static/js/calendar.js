@@ -14,21 +14,32 @@ $(document).ready(function(){
         onChange: function (selectedDates, dateStr, instance) {
                 let fecha = selectedDates[0];
                 $('#modalHoraios').modal('show');
-                // $.ajax({
-                //     url: "/nutri_turnos/turnos_disponibles/",
-                //     type: "GET",
-                //     data: {
-                //         'fecha': fecha
-                //     },
-                //     success: function (data) {
-                //         $('#turnos').html(data);
-                //     }
-                // });
+                url = $('#calendar').data('horarios-url');
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    data: {
+                        fecha: dateStr
+                    },
+
+                    success: function (response) {
+
+                        let turnos = response.turnos;
+                        let horarios = response.horarios;
+
+                        mostrarHorarios(horarios, turnos);
+
+                    },
+
+                    error: function (xhr) {
+                        console.log("Error:", xhr.responseJSON);
+                    }
+                });
             }
     }
 
     calendar = $("#calendar").flatpickr(optional_config);
-    $("#turnoForm > .input").addClass("d-none");
+    $("#calendarCardBody > .input").addClass("d-none");
     $('.flatpickr-months').addClass('rounded');
     
     let ciudadInicial = $('.ciudadChecker:checked').val();
@@ -82,8 +93,7 @@ function setFeriados() {
 $('#backButton').click(function(e){
     e.preventDefault();
     $('#turnoCard').addClass('d-none');
-    $('.flatpickr-calendar').removeClass('d-none');
-    $('#ciudaddDiv').removeClass('d-none');
+    $('#calendarCard').removeClass('d-none');
 })
 
 $('#inputOtro').click(function(){
@@ -104,25 +114,89 @@ $('.ciudadChecker').change(function () {
     actualizarDisponibilidad(ciudadSeleccionada);
 });
 
-$('.botonHorario').click(function () {
-    // Obtener la hora del data attribute
+$('#horariosDisponibles').on('click', '.botonHorario', function () {
     const hora = $(this).data('hora');
-
-    // Marcar el radio correspondiente
     const radioId = $(this).attr('for');
+
     $('#' + radioId).prop('checked', true);
-
-    // Actualizar el input hidden type="time"
     $('#horaSeleccionada').val(hora);
-
-    // Opcional: marcar botón activo visualmente
     $('.botonHorario').removeClass('active');
     $(this).addClass('active');
 });
 
-$('#botonCerrarModal').click(function(){
+$('#botonConfirmarHorario').click(function(e){
+    e.preventDefault();
+    if(!$('#horaSeleccionada').val()) {
+        $('#spanWarning').removeClass('d-none');
+        setTimeout(() => {
+            $('#spanWarning').addClass('d-none');
+        }, 3000);
+        return;
+    }
     $('#modalHoraios').modal('hide');
     $('#turnoCard').removeClass('d-none');
-    $('.flatpickr-calendar').addClass('d-none');
-    $('#ciudaddDiv').addClass('d-none');
+    $('#calendarCard').addClass('d-none');
 })
+
+
+function mostrarHorarios(horarios, turnos) {
+    $('#horaSeleccionada').val('');
+
+    let container = $("#horariosDisponibles");
+    container.html("");
+
+    if (horarios.length === 0) {
+        container.html("<p>No hay horarios disponibles</p>");
+        return;
+    }
+
+    // horas ocupadas
+    let horasOcupadas = turnos.map(t => {
+        return t.hora || t.fecha_hora.substring(11,16);
+    });
+
+    let contador = 1;
+
+    horarios.forEach(function(h) {
+
+        let [hInicio, mInicio] = h.hora_apertura.split(":").map(Number);
+        let [hFin, mFin] = h.hora_cierre.split(":").map(Number);
+
+        let inicioMin = hInicio * 60 + mInicio;
+        let finMin = hFin * 60 + mFin;
+
+        for (let min = inicioMin; min <= finMin; min += 60) {
+
+            let hora = Math.floor(min / 60).toString().padStart(2, '0');
+            let minuto = (min % 60).toString().padStart(2, '0');
+            let horaStr = `${hora}:${minuto}`;
+
+            let disabled = horasOcupadas.includes(horaStr);
+
+            let html = `
+                <div class="col-auto">
+                    <label 
+                        class="btn ${disabled ? 'btn-secondary disabled' : 'btn-white'} botonHorario"
+                        data-hora="${horaStr}"
+                        for="horario_${contador}"
+                    >
+                        ${horaStr}
+                    </label>
+
+                    <input 
+                        type="radio"
+                        name="horario"
+                        id="horario_${contador}"
+                        value="${horaStr}"
+                        class="d-none"
+                        ${disabled ? "disabled" : ""}
+                    >
+                </div>
+            `;
+
+            container.append(html);
+            contador++;
+        }
+
+    });
+}

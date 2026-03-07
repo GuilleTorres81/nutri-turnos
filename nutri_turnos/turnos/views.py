@@ -50,7 +50,7 @@ def registrar_turno(request):
 
 # region REGISTROS
 
-@login_required(login_url='login')  # redirige al login si no está autenticado    
+# @login_required(login_url='login')
 def registro_de_turnos(request):
     usuario=request.user        
     return render(request,"registro.html")
@@ -156,7 +156,10 @@ def get_turnos_ajax(request):
             fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
             turnos = Turno.objects.filter(fecha_hora__date=fecha)
             turnos_data = [turno.to_json() for turno in turnos]
-            return JsonResponse({'turnos': turnos_data})
+            
+            horarios_data = [horario.to_json() for horario in Horario.objects.filter(dia_semana=fecha.strftime('%A'))]
+            
+            return JsonResponse({'turnos': turnos_data, 'horarios': list(horarios_data)}, status=200)
         except ValueError:
             return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
-    
+    return JsonResponse({'error': 'Método no permitido'}, status=405)

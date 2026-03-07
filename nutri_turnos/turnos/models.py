@@ -60,6 +60,14 @@ class Horario(models.Model):
     def __str__(self):
         return f'Horario: {self.dia_semana} de {self.hora_apertura.strftime("%H:%M")} a {self.hora_cierre.strftime("%H:%M")}'
     
+    def to_json(self):
+        return {
+            'id': self.id,
+            'dia_semana': self.dia_semana,
+            'hora_apertura': self.hora_apertura.strftime('%H:%M'),
+            'hora_cierre': self.hora_cierre.strftime('%H:%M'),
+        }
+    
 class ConfiguracionTurnos(models.Model):
     tiempo_entre_turnos = models.DurationField()
 
