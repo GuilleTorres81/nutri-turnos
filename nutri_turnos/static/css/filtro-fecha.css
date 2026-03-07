@@ -11,28 +11,81 @@
     padding: 0.5rem 2.25rem 0.5rem 0.75rem; /* espacio a derecha para el chevron */
     font-size: 1rem;
     line-height: 1.5;
-    color: #9da67a; /* texto */
-    background-color: #213726; /* fondo */
+    color: #4A4A4A; /* texto */
+    background-color: #FFE3DC; /* fondo */
     background-clip: padding-box;
-    border: 1px solid #ced4da; /* borde */
+    border: 1px solid #F48FB1; /* borde */
     border-radius: 0.375rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     cursor: pointer;
 }
 
 .custom-control:hover {
-    border-color: #9da67a;
+    border-color: #F48FB1;
 }
 
 /* Focus */
 .custom-control:focus {
-    color: #9da67a;
-    background-color: #213726;
-    border-color: #86b7fe; /* borde azul */
+    color: #4A4A4A;
+    background-color: #FFE3DC;
+    border-color: #F48FB1; 
     outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25); /* glow */
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 .custom-control::-webkit-calendar-picker-indicator {
     filter: invert(30%) sepia(60%) saturate(500%) hue-rotate(180deg);
     cursor: pointer;
+}
+
+.flatpickr-calendar {
+    background-color: #FFE3DC;
+}
+.flatpickr-months {
+    background-color: #F48FB1;
+    padding-bottom: 10px;
+}
+.flatpickr-day {
+    color: #4A4A4A;
+}
+
+
+.flatpickr-current-month,
+.flatpickr-weekday,
+.flatpickr-prev-month,
+.flatpickr-next-month {
+    color: #4B3F3C;
+}
+
+.flatpickr-day.today{
+    border-color: transparent;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.nextMonthDay.selected,
+.flatpickr-day.prevMonthDay.selected{
+    background-color: #F48FB1;
+    color: #FCE4EC;
+    border-color: #FCE4EC;
+}
+
+.flatpickr-day.today.flatpickr-disabled{
+    border-color: transparent;
+}
+
+.flatpickr-day:hover,
+.flatpickr-day.today:hover,
+.flatpickr-day.selected:hover,
+.flatpickr-day.prevMonthDay:hover,
+.flatpickr-day.nextMonthDay:hover{
+    background-color: #F48FB1;
+    color: #FCE4EC;
+    border-color: #FCE4EC;
+}
+
+.flatpickr-day.today.flatpickr-disabled:hover,
+.flatpickr-day.prevMonthDay.flatpickr-disabled:hover,
+.flatpickr-day.nextMonthDay.flatpickr-disabled:hover{
+    background-color: transparent;
+    color: #3939391a;
+    border-color: transparent;
 }

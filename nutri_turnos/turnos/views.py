@@ -1,4 +1,6 @@
-from datetime import datetime
+from datetime import datetime, date
+import holidays
+
 from django.utils import timezone
 
 from django.shortcuts import render, redirect
@@ -14,12 +16,7 @@ from .utils import *
 
 
 def turnos_home(request):
-    horarios = Horario.objects.all()
-    delta = ConfiguracionTurnos.objects.first().tiempo_entre_turnos
-    horarios_disponibles = calcular_horarios_disponibles(horarios, delta)
-    
-    context = {'horarios_disponibles': horarios_disponibles}
-    return render(request, 'home.html', context)
+    return render(request, 'home.html')
 
 def registrar_turno(request):
     if request.method == 'POST':
@@ -141,11 +138,26 @@ def registro_datatable(request):
     
 # region PETICIONES AJAX
 def get_feriados_ajax(request):
-    if request.method == 'GET':
-        feriados = Feriado.objects.all()
-        fechas_feriados = [feriado.fecha.strftime('%Y-%m-%d') for feriado in feriados]
-        return JsonResponse({'fechas_feriados': fechas_feriados})
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+    anio_actual = datetime.now().year
+
+    ar_holidays = holidays.country_holidays(
+        "AR",
+        subdiv="A",
+        years=range(anio_actual, anio_actual + 10)
+    )
+
+    fechas_holidays = [d.strftime('%Y-%m-%d') for d in ar_holidays.keys()]
+
+    feriados_db = Feriado.objects.all()
+    fechas_db = [f.fecha.strftime('%Y-%m-%d') for f in feriados_db]
+
+    fechas_feriados = list(set(fechas_holidays + fechas_db))
+
+    return JsonResponse({'fechas_feriados': fechas_feriados})
 
 
 def get_turnos_ajax(request):
@@ -160,6 +172,16 @@ def get_turnos_ajax(request):
             horarios_data = [horario.to_json() for horario in Horario.objects.filter(dia_semana=fecha.strftime('%A'))]
             
             return JsonResponse({'turnos': turnos_data, 'horarios': list(horarios_data)}, status=200)
+        except ValueError:
+            return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+def get_horarios_ajax(request):
+    if request.method == 'GET':
+        try:
+            horarios = Horario.objects.all()
+            horarios_data = [horario.to_json() for horario in horarios]
+            return JsonResponse({'horarios': horarios_data}, status=200)
         except ValueError:
             return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
     return JsonResponse({'error': 'Método no permitido'}, status=405)

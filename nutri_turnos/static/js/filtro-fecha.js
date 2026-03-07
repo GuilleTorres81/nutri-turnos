@@ -19,6 +19,7 @@ $(document).ready(function(){
         ],
         onChange: function (selectedDates, dateStr, instance) {
                 let fecha = selectedDates[0];
+                $('#cleanButton').removeClass('d-none')
                 // $.ajax({
                 //     url: "/nutri_turnos/turnos_disponibles/",
                 //     type: "GET",
@@ -35,9 +36,11 @@ $(document).ready(function(){
     $("#filtroFecha").flatpickr(optional_config);
     $('.flatpickr-months').addClass('rounded');
 
-    $(".clear_button").click(function() {
+    $("#cleanButton").click(function() {
+        $('#filtroFecha').val('');
         $('#filtroFecha').flatpickr().clear();
         $("#filtroFecha").flatpickr(optional_config);
+        $(this).addClass('d-none')
     })
 })
 
