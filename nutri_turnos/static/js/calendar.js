@@ -62,7 +62,7 @@ function actualizarDisponibilidad(ciudad) {
                 return (
                     date.getDay() === 0 ||
                     date.getDay() === 6 ||
-                    date.getDay() === 1
+                    date.getDay() === 5
                 );
             });
 
@@ -71,7 +71,7 @@ function actualizarDisponibilidad(ciudad) {
 
         } else if (ciudad === 'Tartagal') {
             reglas.push(function (date) {
-                return !(date.getDay() === 1);
+                return !(date.getDay() === 5);
             });
 
             $('#consultorioDiv').removeClass('d-none');
@@ -176,7 +176,7 @@ function mostrarHorarios(horarios, turnos) {
             let html = `
                 <div class="col-auto">
                     <label 
-                        class="btn ${disabled ? 'btn-secondary disabled' : 'btn-white'} botonHorario"
+                        class="btn ${disabled ? 'btn-secondary disabled' : 'btn-white'} fw-bold botonHorario"
                         data-hora="${horaStr}"
                         for="horario_${contador}"
                     >

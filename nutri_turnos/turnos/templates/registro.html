@@ -33,7 +33,7 @@
                             id="filtroFecha"
                             class="custom-control"
                         />
-                        <button id="cleanButton" class="btn btn-white btn-sm px-1 py-0 fs-5 d-none" title="clear" data-clear><i class="fa-regular fa-circle-xmark"></i></button>
+                        <button id="cleanButton" class="btn btn-white btn-sm px-1 py-0 fs-5 d-none fw-bold" title="clear" data-clear><i class="fa-regular fa-circle-xmark"></i></button>
                     </div>
                     
                 </div>
@@ -74,7 +74,7 @@
             </div>
             <div class="modal-body">
                 {% csrf_token %}
-                <div id="diasContainer" class="d-flex gap-2 justify-content-center mb-2"></div>
+                <div id="diasContainer" class="d-flex flex-wrap gap-2 justify-content-center mb-2"></div>
                 <div id="horariosContainer" class="d-flex gap-2 justify-content-center">
                     <input type="time" id="horaApertura" name="hora_apertura" value="" class="form-control">
                     <input type="time" id="horaCierre" name="hora_cierre" value="" class="form-control">

@@ -30,48 +30,48 @@ h5{
 }
 
 .btn-primary {
-    background-color: #FFB7A5;
-    border-color: #FFF4F1;
+    background-color: #7dc9ad;
+    border-color: #F2FBF7;
 }
 
 .btn-primary:hover {
-    background-color: #FFF4F1;
-    border-color: #FFB7A5;
-    color: #FFB7A5;
+    background-color: #F2FBF7;
+    border-color: #A8E6CF;
+    color: #A8E6CF;
 }
 
 .btn-primary:active:focus {
-    background-color: #FFF4F1;
-    border-color: #FFB7A5;
-    color: #FFB7A5;
+    background-color: #F2FBF7;
+    border-color: #A8E6CF;
+    color: #A8E6CF;
 }
 
 .ciudadChecker:checked + .btn-ciudad {
-    background-color: #FFB7A5;
-    border-color: #FFF4F1;
-    color: #FFF4F1;
+    background-color: #A8E6CF;
+    border-color: #F2FBF7;
+    color: #F2FBF7;
 }
 
 .btn-white{
-    background-color: #FFF4F1;
-    border-color: #FFB7A5;
-    color: #FFB7A5;
+    background-color: #F2FBF7;
+    border-color: #A8E6CF;
+    color: #A8E6CF;
 }
 
 .btn-white:hover{
-    background-color: #FFB7A5;
-    border-color: #FFF4F1;
-    color: #FFF4F1;
+    background-color: #A8E6CF;
+    border-color: #F2FBF7;
+    color: #F2FBF7;
 }
 
 .btn-white:active:focus {
-    background-color: #FFB7A5;
-    border-color: #FFF4F1;
-    color: #FFF4F1;
+    background-color: #A8E6CF;
+    border-color: #F2FBF7;
+    color: #F2FBF7;
 }
 
 .btn-white.active{
-    background-color: #FFB7A5;
-    border-color: #FFF4F1;
-    color: #FFF4F1;
+    background-color: #A8E6CF;
+    border-color: #F2FBF7;
+    color: #F2FBF7;
 }
