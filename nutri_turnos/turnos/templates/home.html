@@ -45,8 +45,8 @@
             <li class="card">
                 <figure>
                 <!-- Photo by Rawpixel on Unsplash -->
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRudnBqYu4j5U8LTNCXbMPD4_PSopjHa_6Z4A&s" alt="Three different glasses of beer">
-                <figcaption><h3>Nutrición</h3></figcaption>
+                <img src="https://nuevavidabuin.cl/wp-content/uploads/2024/03/WhatsApp-Image-2021-07-31-at-5.03.34-PM-1-768x1024.jpeg" alt="Three different glasses of beer">
+                <figcaption><h3>Bioimpedancia</h3></figcaption>
                 </figure>
                 <p>
                 Galaxies the ash of stellar alchemy prime number science inconspicuous motes of rock and gas brain is the seed of intelligence.
@@ -82,7 +82,7 @@
 
         <div class="d-flex flex-column align-items-center mt-4 col-md-4 ps-md-5">
             <h2>Solicita un turno</h2>
-            <form id="turnoForm" action="{% url 'turnos:registrar_turno' %}" method="post" class="">
+            <form id="turnoForm" action="{% url 'turnos:registrar_turno' %}" method="post" class="needs-validation" novalidate>
                 {% csrf_token %} 
                 <div class="card rounded" id="calendarCard">
                     <div class="card-body rounded" id="calendarCardBody">
@@ -101,7 +101,9 @@
                 </div>
                 <div class="card rounded d-none" id="turnoCard">
                     <div class="card-body rounded">
-                            
+                            <div class="d-flex justify-content-center">
+                                <p id="fechaHoraText" class="mb-2 text-center fw-bold badge rounded-pill text-bg-primary fs-6"></p>
+                            </div>
                             <input
                                 type="time"
                                 id="horaSeleccionada"
@@ -110,19 +112,19 @@
                             />
                             <label for="nombre">Nombre</label>
                             <input type="text" name="nombre" id="nombre" class="form-control 
-                            mb-2">
+                            mb-2" required>
                             <label for="apellido">Apellido</label>
                             <input type="text" name="apellido" id="apellido" class="form-control
-                            mb-2">
+                            mb-2" required>
                             <label for="email">Email</label>
                             <input type="email" name="email" id="email" class="form-control
-                            mb-2">
+                            mb-2" required>
                             <label for="telefono">Teléfono</label>
                             <input type="tel" name="telefono" id="telefono" class="form-control
-                            mb-2">
+                            mb-2" required>
                             <label for="edad">Edad</label>
                             <input type="number" name="edad" id="edad" class="form-control
-                            mb-2" min="0" max="100">
+                            mb-2" min="0" max="100" required>
                             <div>
                                 <h6 class="fw-bold">Lugar de encuentro</h6>
                                 <div class="d-flex gap-2">
@@ -155,9 +157,11 @@
                                 </div>
 
                                 <div>
-                                    <input type="radio" name="motivo" id="motivo_4" value="otro" class="form-check-input">
-                                    <label for="motivo_4">Otro: <input type="text" class="form-control" id="inputOtro"></label>
+                                    <input type="radio" name="motivo" id="motivo_4" value="" class="form-check-input">
+                                    <label for="motivo_4">Otro: </label>
+                                    <input type="text" class="form-control" id="inputOtro">
                                 </div>
+                                <span class="text-danger text-center d-none" id="motivoWarning">Debe seleccionar un motivo</span>
                             </div>
                             
                             <div class="d-flex justify-content-center">
@@ -203,4 +207,5 @@
 
 {% block scripts %}
     <script src="{% static 'js/calendar.js' %}"></script>
+    <script src="{% static 'js/turno-form.js' %}"></script>
 {% endblock %}

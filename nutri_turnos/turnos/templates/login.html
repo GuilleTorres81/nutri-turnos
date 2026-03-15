@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-column align-items-center">
+    <h2 h2>Iniciar sesión</h2>
+    <form method="post"action="{% url 'turnos:login' %}">
+      {% csrf_token %}
+      {% if messages %}
+          {% for message in messages %}
+              <div
+                  class="mb-2 p-2 rounded text-white
+                  {% if message.tags == 'error' %} bg-danger
+                  {% elif message.tags == 'success' %} bg-success
+                  {% else %} bg-info {% endif %}">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      {% endif %}
+      <label>Usuario:</label>
+      <input name="username" class="form-control" required>
+      <label>Contraseña:</label>
+      <input name="password" type="password" class="form-control" required>
+      <div class="d-flex justify-content-center">
+        <button class="btn btn-success mt-2" type="submit">Iniciar sesión</button>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}

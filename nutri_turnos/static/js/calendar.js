@@ -133,6 +133,7 @@ $('#botonConfirmarHorario').click(function(e){
         }, 3000);
         return;
     }
+    changeFechaHoraText();
     $('#modalHoraios').modal('hide');
     $('#turnoCard').removeClass('d-none');
     $('#calendarCard').addClass('d-none');
@@ -199,4 +200,11 @@ function mostrarHorarios(horarios, turnos) {
         }
 
     });
+}
+
+function changeFechaHoraText() {
+    $('#fechaHoraText').text(`Turno del ${calendar.selectedDates[0].toLocaleDateString('es-AR', {
+        month: 'long',
+        day: 'numeric'
+    })} a las ${$('#horaSeleccionada').val()}`);
 }

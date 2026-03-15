@@ -5,6 +5,8 @@ from django.utils import timezone
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.views.decorators.cache import never_cache
 
 from django.db.models import Q, F
@@ -13,8 +15,33 @@ from django.http import JsonResponse
 from .models import *
 from .utils import *
 
+# region LOGIN
+@never_cache
+def login_view(request):
+    print("Usuario en sesión:", request.user)
+    if request.user.is_authenticated:
+        return redirect('turnos:registro')  
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('turnos:registro')
+        else:
+            messages.error(request, "Usuario o contraseña incorrectos.")
+            
+    return render(request, "login.html")
+
+def logout_view(request):
+    logout(request)  # elimina la sesión del usuario
+    return redirect("turnos:login")  # cambia "login" por el nombre de tu url de login
 
 
+# regin HOME
 def turnos_home(request):
     return render(request, 'home.html')
 
@@ -47,7 +74,7 @@ def registrar_turno(request):
 
 # region REGISTROS
 
-# @login_required(login_url='login')
+@login_required(login_url='turnos:login')
 def registro_de_turnos(request):
     usuario=request.user        
     return render(request,"registro.html")

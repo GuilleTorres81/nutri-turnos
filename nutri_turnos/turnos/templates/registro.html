@@ -20,9 +20,21 @@
             class="card-header d-md-flex justify-content-between align-items-center"
         >
             <h2 class="mb-0">Registro de turnos</h2>
-            <button type="button" data-bs-target="#modalConfiguracion" data-bs-toggle="modal" class="btn btn-secondary btn-sm mt-2 mt-md-0">
-                <i class="fas fa-cog"></i> Configuración
-            </button>
+            <div class="d-flex gap-2">
+                <a
+                        class="btn btn-primary btn-sm"
+                        href="{% url 'turnos_home' %}"
+                        ><i class="fa-solid fa-seedling"></i> Ver formulario</a
+                >
+                <button type="button" data-bs-target="#modalConfiguracion" data-bs-toggle="modal" class="btn btn-secondary btn-sm mt-2 mt-md-0">
+                    <i class="fas fa-cog"></i> Configuración
+                </button>
+                <a
+                        class="btn btn-danger btn-sm"
+                        href="{% url 'turnos:logout' %}"
+                        ><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a
+                >
+            </div>
         </div>
         <div class="card-body">
             <div>

@@ -31,7 +31,7 @@ h5{
 
 .btn-primary {
     background-color: #7dc9ad;
-    border-color: #F2FBF7;
+    border-color: #7dc9ad;
 }
 
 .btn-primary:hover {
@@ -74,4 +74,8 @@ h5{
     background-color: #A8E6CF;
     border-color: #F2FBF7;
     color: #F2FBF7;
+}
+
+.text-bg-primary{
+    background-color: #F48FB1 !important;
 }
