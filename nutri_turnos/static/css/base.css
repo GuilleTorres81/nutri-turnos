@@ -11,9 +11,16 @@ h5{
     color: #fff;
 }
 
+ul{
+    list-style: none;
+    text-align: justify;
+    padding-left: .5em;
+}
+
 .card,
 .card-body{
     background-color: #FCE4EC;
+    text-align: justify;
 }
 
 .modal-header{

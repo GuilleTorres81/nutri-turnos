@@ -21,18 +21,16 @@
         >
             <h2 class="mb-0">Registro de turnos</h2>
             <div class="d-flex gap-2">
-                <a
-                        class="btn btn-primary btn-sm"
-                        href="{% url 'turnos_home' %}"
-                        ><i class="fa-solid fa-seedling"></i> Ver formulario</a
-                >
+                <a class="btn btn-primary btn-sm" href="{% url 'turnos_home' %}">
+                    <i class="fa-solid fa-seedling"></i> Ver formulario
+                </a>
                 <button type="button" data-bs-target="#modalConfiguracion" data-bs-toggle="modal" class="btn btn-secondary btn-sm mt-2 mt-md-0">
                     <i class="fas fa-cog"></i> Configuración
                 </button>
                 <a
-                        class="btn btn-danger btn-sm"
-                        href="{% url 'turnos:logout' %}"
-                        ><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a
+                    class="btn btn-danger btn-sm"
+                    href="{% url 'turnos:logout' %}"
+                    ><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a
                 >
             </div>
         </div>
@@ -110,8 +108,7 @@
 <script src="https://cdn.datatables.net/responsive/3.0.7/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.2.5/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.2.5/js/buttons.html5.min.js"></script>
-<!-- FONTAWESOME -->
-<script src="https://kit.fontawesome.com/06f507be24.js" crossorigin="anonymous"></script>
+
 <!-- FLATPICKR -->
 <script src="{% static 'js/filtro-fecha.js' %}"></script>
 <script src="{% static 'js/configuraciones.js' %}"></script>
