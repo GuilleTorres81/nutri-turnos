@@ -36,7 +36,7 @@ a:hover {
 /* Styles for the hero image */
 .hero {
   /* Photo by mnm.all on Unsplash */
-  background: url('https://thumbs.dreamstime.com/b/productos-de-prote%C3%ADna-para-la-dieta-cetog%C3%A9nica-y-aventuras-sobre-un-fondo-madera-con-espacio-texto-431858787.jpg') center top;
+  background: url('/static/assets/img/hero.webp') center top;
   background-size: cover;
   padding: 4rem 2rem;
   /* grid styles */
