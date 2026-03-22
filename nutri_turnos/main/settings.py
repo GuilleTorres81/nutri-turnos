@@ -80,7 +80,7 @@ USE_TZ = True
 
 # 📦 Static files
 STATIC_URL = '/static/'
-STATIC_ROOT = '/root/nutri-turnos/static/'
+STATIC_ROOT = '/var/www/nutri-turnos/static/'
 
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
