@@ -64,6 +64,23 @@ $(document).ready(function () {
             },
             { data: "motivo" },
             { data: "encuentro" },
+            // Columna de acciones (editar, eliminar)
+            {
+                data: null,
+                orderable: false,
+                render: function (data, type, row) {
+                    return `
+                        <div class="d-flex gap-2 justify-content-center">
+                            <button class="btn btn-sm btn-primary btn-editar" data-id="${row.id}">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger btn-eliminar" data-id="${row.id}" data-bs-toggle="modal" data-bs-target="#modalEliminar">
+                                <i class="fa-solid fa-x"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+            }
         ],
         language: {
             decimal: "",
@@ -100,5 +117,46 @@ $(document).ready(function () {
     // Detectar cambios en los filtros y recargar tabla
     $("#filtroFecha").on("change", function () {
         dataTable.ajax.reload();
+    });
+});
+
+$('#registroTable').on('click', '.btn-eliminar', function() {
+    idRowClicked = $(this).data('id');
+    let rawFecha = $(this).closest('tr').find('td:first').text().trim();
+    let [fechaPart, horaPart] = rawFecha.split(' ');
+    let [dia, mes, anio] = fechaPart.split('/');
+    let fechaISO = `${anio}-${mes}-${dia}${horaPart ? 'T' + horaPart : ''}`;
+    let formatFecha = new Date(fechaISO);
+    let rowFecha = formatFecha.toLocaleDateString('es-AR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+    });
+    rowNombre = $(this).closest('tr').find('td:nth-child(3)').text();
+    rowApellido = $(this).closest('tr').find('td:nth-child(2)').text();
+    $('#modalEliminar .modal-body').html(`¿Confirma que desea cancelar el turno de <b>${rowNombre} ${rowApellido}</b> programado para el <b>${rowFecha}</b>?`);
+});
+
+$('#confirmarEliminar').on('click', function() {
+    $.ajax({
+        url: `/turnos/cancelar-turno/${idRowClicked}/`,
+        type: 'POST',
+        headers: {
+            'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(response) {
+            if (response.success) {
+                $('#modalEliminar').modal('hide');
+                // Recargar la tabla para reflejar el cambio
+                $('#registroTable').DataTable().ajax.reload();
+                // Mostrar mensaje de éxito (puedes usar un toast o alert)
+                alert('Turno cancelado exitosamente.');
+            } else {
+                alert('Error al cancelar el turno.');
+            }
+        },
+        error: function() {
+            alert('Ocurrió un error al intentar cancelar el turno.');
+        }
     });
 });

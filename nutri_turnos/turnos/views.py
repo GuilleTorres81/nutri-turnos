@@ -71,6 +71,16 @@ def registrar_turno(request):
             return redirect('turnos_home')
     return redirect('turnos_home')
 
+def cancelar_turno(request, turno_id):
+    if request.method == 'POST':
+        try:
+            turno = Turno.objects.get(id=turno_id)
+            turno.delete()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            print(f'Error al cancelar el turno: {e}')
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
 # region REGISTROS
 
