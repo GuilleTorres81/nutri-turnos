@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from decouple import config
 
@@ -79,7 +80,7 @@ USE_TZ = True
 
 # 📦 Static files
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, '../static')
 
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
