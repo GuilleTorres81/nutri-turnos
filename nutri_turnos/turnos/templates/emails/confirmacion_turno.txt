@@ -1,0 +1,7 @@
+Turno confirmado
+
+Turno para {{ turno.nombre }} {{ turno.apellido }}
+el {{ turno.fecha }} a las {{ turno.hora }}
+
+Cancelar turno:
+{{ cancel_url }}

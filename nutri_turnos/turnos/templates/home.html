@@ -90,7 +90,7 @@
 
         <div class="d-flex flex-column align-items-center mt-4 col-md-4 ps-md-5">
             <h2>Solicita un turno</h2>
-            <form id="turnoForm" action="{% url 'turnos:registrar_turno' %}" method="post" class="needs-validation" novalidate>
+            <form id="turnoForm" data-url="{% url 'turnos:registrar_turno' %}" method="post" class="needs-validation" novalidate>
                 {% csrf_token %} 
                 <div class="card rounded" id="calendarCard">
                     <div class="card-body rounded" id="calendarCardBody">
@@ -117,6 +117,11 @@
                                 id="horaSeleccionada"
                                 class="d-none"
                                 name="hora"
+                            />
+                            <input
+                                type="date"
+                                id="fechaSeleccionada"
+                                class="d-none"
                             />
                             <label for="nombre">Nombre</label>
                             <input type="text" name="nombre" id="nombre" class="form-control 
@@ -176,7 +181,7 @@
                                 <button id="backButton" class="btn btn-secondary me-2">
                                     Cancelar
                                 </button>
-                                <button type="submit" class="btn btn-primary">
+                                <button type="button" class="btn btn-primary" id="turnoSubmitButton">
                                     Solicitar Turno
                                 </button>
                             </div>
@@ -206,6 +211,25 @@
                 <div>
                     <button type="button" class="btn btn-primary" id="botonConfirmarHorario">Confirmar Horario</button>
                 </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+<!-- MODAL MENSAJE CONFIRMACION/ERROR -->
+    <div class="modal" tabindex="-1" id="modalMensaje">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalMensajeTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column align-content-center">
+                <p id="modalMensajeBody" class="text-center"></p>
+                <span id="spanWarning" class="badge bg-warning text-dark text-center d-none">Recuerde que tiene un lapso de 48 horas antes del turno para cancelarlo.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
             </div>
         </div>

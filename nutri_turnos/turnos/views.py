@@ -2,15 +2,19 @@ from datetime import datetime, date
 import holidays
 
 from django.utils import timezone
-
+from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.decorators.cache import never_cache
+from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+from django.conf import settings
+from django.urls import reverse
 
 from django.db.models import Q, F
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from .models import *
 from .utils import *
@@ -46,30 +50,107 @@ def turnos_home(request):
     return render(request, 'home.html')
 
 def registrar_turno(request):
-    if request.method == 'POST':
-        try:
-            nombre = request.POST['nombre']
-            apellido = request.POST['apellido']
-            email = request.POST['email']
-            telefono = request.POST['telefono']
-            edad = request.POST['edad']
-            ciudad = request.POST['ciudad']
-            encuentro = request.POST['encuentro']
-            motivo = request.POST['motivo']
-            
-            fecha_str = request.POST['fecha']
-            hora_str = request.POST['hora']
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
 
+    try:
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
+        email = request.POST.get('email')
+        telefono = request.POST.get('telefono')
+        edad = request.POST.get('edad')
+        ciudad = request.POST.get('ciudad')
+        encuentro = request.POST.get('encuentro')
+        motivo = request.POST.get('motivo')
+
+        fecha_str = request.POST.get('fecha')
+        hora_str = request.POST.get('hora')
+
+        # 🧪 Validaciones básicas
+        if not all([nombre, apellido, email, fecha_str, hora_str]):
+            return JsonResponse({
+                'error': 'Faltan campos obligatorios'
+            }, status=400)
+
+        try:
             fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
             hora = datetime.strptime(hora_str, "%H:%M").time()
-            
-            turno = Turno(nombre=nombre, apellido=apellido, email=email, telefono=telefono, edad=edad, ciudad=ciudad, fecha=fecha, hora=hora, encuentro=encuentro, motivo=motivo)
-            turno.save()
-            return redirect('turnos_home')
+            if Turno.objects.filter(fecha=fecha, hora=hora).exists():
+                print(f"Intento de registro duplicado para {fecha} {hora}")
+                return JsonResponse({
+                    'error': 'Ya existe un turno para esa fecha y hora'
+                }, status=400)
+        except ValueError:
+            return JsonResponse({
+                'error': 'Formato de fecha u hora inválido'
+            }, status=400)
+
+        turno = Turno.objects.create(
+            nombre=nombre,
+            apellido=apellido,
+            email=email,
+            telefono=telefono,
+            edad=edad,
+            ciudad=ciudad,
+            fecha=fecha,
+            hora=hora,
+            encuentro=encuentro,
+            motivo=motivo
+        )
+        try:
+            enviar_confirmacion_turno(turno.id)
         except Exception as e:
-            print(f'Error al registrar el turno: {e}')
-            return redirect('turnos_home')
-    return redirect('turnos_home')
+            print(f"Error al enviar email de confirmación: {e}")
+            
+        return JsonResponse({
+            'message': 'Turno registrado correctamente',
+            'id': turno.id
+        }, status=201)
+
+    except Exception as e:
+        return JsonResponse({
+            'error': 'Error interno del servidor',
+            'details': str(e)  # opcional, útil en dev
+        }, status=500)
+
+def enviar_confirmacion_turno(turno_id):
+    turno = get_object_or_404(Turno, id=turno_id)
+
+    token = generar_token(turno.id)
+    path = reverse('turnos:cancelar_turno_por_mail', args=[token])
+    cancel_url = f"{settings.DOMAIN}{path}"
+    
+    context = {
+        'turno': turno,
+        'cancel_url': cancel_url
+    }
+    print(cancel_url)  # para debug, asegurarnos que el token se genera correctamente
+    subject = "Confirmación de turno"
+    from_email = settings.DEFAULT_FROM_EMAIL
+    to = [turno.email]
+
+    html_content = render_to_string('emails/confirmacion_turno.html', context)
+    text_content = render_to_string('emails/confirmacion_turno.txt', context)
+
+    email = EmailMultiAlternatives(subject, text_content, from_email, to)
+    email.attach_alternative(html_content, "text/html")
+    email.send(fail_silently=False)    
+    
+    
+def cancelar_turno_por_mail(request, token):
+    turno_id = validar_token(token)
+
+    if not turno_id:
+        return HttpResponse("Link inválido o expirado", status=400)
+
+    try:
+        turno = Turno.objects.get(id=turno_id)
+        print(turno)
+        turno.estado = "Cancelado"
+        turno.delete()
+        return HttpResponse("El turno fue cancelado correctamente")
+    except Turno.DoesNotExist:
+        return HttpResponse("Turno no encontrado", status=404)
 
 def cancelar_turno(request, turno_id):
     if request.method == 'POST':
@@ -81,7 +162,6 @@ def cancelar_turno(request, turno_id):
             print(f'Error al cancelar el turno: {e}')
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
-
 # region REGISTROS
 
 @login_required(login_url='turnos:login')
@@ -97,8 +177,8 @@ def registro_datatable(request):
     order_direction = request.GET.get('order[0][dir]', 'asc')
     search_value = request.GET.get('search[value]', None)
 
-    # filtro_comida = request.GET.get('comida')
-    # filtro_casino = request.GET.get('casino')
+    # filtro_ciudad = request.GET.get('ciudad')
+    # filtro_motivo = request.GET.get('motivo')
     filtro_fecha  = request.GET.get('fecha')
     
     fecha_hoy = timezone.localdate()
@@ -145,10 +225,10 @@ def registro_datatable(request):
     )
     
     # Aplicamos filtros dinámicos
-    # if filtro_comida:
-    #     filtered_data = filtered_data.filter(comida=filtro_comida)
-    # if filtro_casino:
-    #     filtered_data = filtered_data.filter(casino=filtro_casino)
+    # if filtro_ciudad:
+    #     filtered_data = filtered_data.filter(ciudad=filtro_ciudad)
+    # if filtro_motivo:
+    #     filtered_data = filtered_data.filter(motivo=filtro_motivo)
     if filtro_fecha:
         try:
             fecha_obj = datetime.strptime(filtro_fecha, "%Y-%m-%d").date()

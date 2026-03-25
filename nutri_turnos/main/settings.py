@@ -15,6 +15,18 @@ ALLOWED_HOSTS = config(
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
 
+# Email config
+DOMAIN = "https://nutriturnos.duckdns.org"
+DEFAULT_FROM_EMAIL = "no-reply@nutriturnos.duckdns.org"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'guilletorres81@gmail.com'
+EMAIL_HOST_PASSWORD = 'qqhd szsg urrv awnd'  # ⚠️ no es tu contraseña normal
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # Apps
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -43,7 +55,7 @@ ROOT_URLCONF = 'main.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'turnos/templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
