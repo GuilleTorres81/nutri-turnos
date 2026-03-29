@@ -8,10 +8,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = [
-    'nutriturnos.duckdns.org',
-    '34.121.166.228',
-]
+# Hosts
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='127.0.0.1,localhost',
+    cast=lambda v: [s.strip() for s in v.split(',')]
+)
+
+# Email config
+DOMAIN = "https://nutriturnos.duckdns.org"
+DEFAULT_FROM_EMAIL = 'NutriTurnos <onboarding@resend.dev>'
+RESEND_API_KEY = "re_4wa1P1Nc_YUThX5Cx53jT8WuK2ajFj9rx"
 
 # Apps
 INSTALLED_APPS = [
@@ -24,9 +31,10 @@ INSTALLED_APPS = [
     'turnos',
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # 👈 importante
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # solo molesta poco en dev
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -40,7 +48,7 @@ ROOT_URLCONF = 'main.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'turnos/templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -54,14 +62,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'main.wsgi.application'
 
-# 🐘 PostgreSQL
+# Base de datos
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),  # IP de tu VPS o Cloud SQL
+        'NAME': config('DB_NAME', default='nutri_dev'),
+        'USER': config('DB_USER', default='postgres'),
+        'PASSWORD': config('DB_PASSWORD', default=''),
+        'HOST': config('DB_HOST', default='127.0.0.1'),
         'PORT': config('DB_PORT', default='5432'),
     }
 }
@@ -74,18 +82,28 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# 🌎 Internacionalización
+# Internacionalización
 LANGUAGE_CODE = 'es-ar'
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
 USE_I18N = True
 USE_TZ = True
 
-# 📦 Static files
+# Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = '/var/www/nutri-turnos/static/'
 
-STATICFILES_DIRS = [BASE_DIR / 'static']
+if DEBUG:
+    # Desarrollo
+    STATICFILES_DIRS = [BASE_DIR / 'static']
+else:
+    # Producción
+    STATIC_ROOT = '/var/www/nutri-turnos/static/'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Whitenoise
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    # Seguridad extra (recomendado en prod)
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True

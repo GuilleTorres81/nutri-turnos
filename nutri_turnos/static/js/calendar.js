@@ -13,6 +13,7 @@ $(document).ready(function(){
         inline: true,
         onChange: function (selectedDates, dateStr, instance) {
                 let fecha = selectedDates[0];
+                $('#fechaSeleccionada').val(dateStr);
                 $('#modalHoraios').modal('show');
                 url = $('#calendar').data('horarios-url');
                 $.ajax({

@@ -1,3 +1,7 @@
+html{
+    scroll-behavior: smooth;
+}
+
 body{
     background-color: #F8BBD0 !important;
     color: #4A4A4A !important;
@@ -9,12 +13,18 @@ h3,
 h4,
 h5{
     color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,.7);
 }
 
 ul{
     list-style: none;
     text-align: justify;
     padding-left: .5em;
+}
+
+#profile-img{
+    border-radius: 50% !important;
+    width: 12rem;
 }
 
 .card,
