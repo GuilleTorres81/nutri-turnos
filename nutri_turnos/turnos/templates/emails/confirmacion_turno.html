@@ -1,26 +1,41 @@
-<div style="font-family: Arial, sans-serif; text-align: center;">
+<div style="font-family: Arial, sans-serif; text-align: center; max-width: 500px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+
     <h2 style="color: #28a745;">✔ Turno confirmado</h2>
 
     <p>
-        <b>{{ turno.nombre }} {{ turno.apellido }}</b> su turno para<br>
+        <b>{{ turno.nombre }} {{ turno.apellido }}</b>, su turno para<br>
         <b>{{ turno.motivo }}</b> fue confirmado para<br>
         el día <b>{{ turno.fecha|date:"j \\d\\e F" }}</b><br>
         a las <b>{{ turno.hora }}</b>
     </p>
 
-    <p id="spanWarning" style="color: #141414; background-color: #ffc107; border: 1px solid #ffc107; border-radius: 5px; padding: 5px;">Recuerde que tiene un lapso de 48 horas antes del turno para cancelarlo.</p><br>
-    <span>_________________________________________________</span><br><br>
-    <span>Si deseas cancelar tu turno, haz clic en el siguiente botón:</span><br>
+    <div style="
+        color: #141414;
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 15px 0;
+        font-size: 14px;
+    ">
+        Recuerde que tiene un lapso de 48 horas antes del turno para cancelarlo.
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+
+    <p>Si desea cancelar su turno, haga clic en el siguiente botón:</p>
+
     <a href="{{ cancel_url }}"
-        style="
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #dc3545;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 15px;
-        ">
+       style="
+           display: inline-block;
+           padding: 12px 20px;
+           background-color: #dc3545;
+           color: #ffffff;
+           text-decoration: none;
+           border-radius: 5px;
+           font-weight: bold;
+       ">
         Cancelar turno
     </a>
+
 </div>

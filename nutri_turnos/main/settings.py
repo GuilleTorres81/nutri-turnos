@@ -17,16 +17,9 @@ ALLOWED_HOSTS = config(
 
 # Email config
 DOMAIN = "https://nutriturnos.duckdns.org"
-DEFAULT_FROM_EMAIL = "no-reply@nutriturnos.duckdns.org"
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'NutriTurnos <onboarding@resend.dev>'
+RESEND_API_KEY = "re_4wa1P1Nc_YUThX5Cx53jT8WuK2ajFj9rx"
 
-EMAIL_HOST_USER = 'guilletorres81@gmail.com'
-EMAIL_HOST_PASSWORD = 'qqhd szsg urrv awnd'  # ⚠️ no es tu contraseña normal
-
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # Apps
 INSTALLED_APPS = [
     'django.contrib.admin',

@@ -90,7 +90,7 @@ function mensajeConfirmacion(){
             day: 'numeric'
         })}</b> a las <b>${$('#horaSeleccionada').val()}</b> se reservó correctamente.</p>`
     );
-    $('#spanWarning').removeClass('d-none');
+    $('#spanWarning2').removeClass('d-none');
     $('#modalMensaje').modal('show');
 }
 
@@ -101,7 +101,7 @@ function mensajeError(){
         <p>Hubo un error al solicitar el turno. Por favor, inténtalo de nuevo.</p>
         <p>Es posible que el turno ya no esté disponible, recuerde que <b>debe llegarle la confirmación por e-mail</b>.</p>
         `);
-    $('#spanWarning').addClass('d-none');
+    $('#spanWarning2').addClass('d-none');
     $('#modalMensaje').modal('show');
 }
 

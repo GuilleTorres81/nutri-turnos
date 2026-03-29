@@ -1,5 +1,6 @@
 from datetime import datetime, date
 import holidays
+import resend
 
 from django.utils import timezone
 from django.core.mail import EmailMultiAlternatives
@@ -18,6 +19,8 @@ from django.http import JsonResponse, HttpResponse
 
 from .models import *
 from .utils import *
+
+resend.api_key = settings.RESEND_API_KEY
 
 # region LOGIN
 @never_cache
@@ -119,22 +122,20 @@ def enviar_confirmacion_turno(turno_id):
     token = generar_token(turno.id)
     path = reverse('turnos:cancelar_turno_por_mail', args=[token])
     cancel_url = f"{settings.DOMAIN}{path}"
-    
+
     context = {
         'turno': turno,
         'cancel_url': cancel_url
     }
-    print(cancel_url)  # para debug, asegurarnos que el token se genera correctamente
-    subject = "Confirmación de turno"
-    from_email = settings.DEFAULT_FROM_EMAIL
-    to = [turno.email]
 
     html_content = render_to_string('emails/confirmacion_turno.html', context)
-    text_content = render_to_string('emails/confirmacion_turno.txt', context)
 
-    email = EmailMultiAlternatives(subject, text_content, from_email, to)
-    email.attach_alternative(html_content, "text/html")
-    email.send(fail_silently=False)    
+    resend.Emails.send({
+        "from": settings.DEFAULT_FROM_EMAIL, 
+        "to": [turno.email],
+        "subject": "Confirmación de turno",
+        "html": html_content,
+    })
     
     
 def cancelar_turno_por_mail(request, token):

@@ -7,7 +7,6 @@ $(document).ready(function(){
             ...flatpickr.l10ns.es,
             firstDayOfWeek: 0
         },
-        defaultDate: "today",
         disable: [
             function(date) {
             return (
