@@ -91,15 +91,14 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/nutri-turnos/nutri_turnos/static/'
+STATIC_ROOT = '/var/www/nutri-turnos/staticfiles/'
 
 if DEBUG:
     # Desarrollo
     STATICFILES_DIRS = [BASE_DIR / 'static']
 else:
     # Producción
-    STATIC_ROOT = '/var/www/nutri-turnos/nutri_turnos/static/'
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATIC_ROOT = '/var/www/nutri-turnos/staticfiles/'
 
     # Seguridad extra (recomendado en prod)
     SECURE_BROWSER_XSS_FILTER = True
