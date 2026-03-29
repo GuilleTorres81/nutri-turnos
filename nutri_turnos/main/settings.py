@@ -92,15 +92,9 @@ USE_TZ = True
 # Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = '/var/www/nutri-turnos/staticfiles/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
-if DEBUG:
-    # Desarrollo
-    STATICFILES_DIRS = [BASE_DIR / 'static']
-else:
-    # Producción
-    STATIC_ROOT = '/var/www/nutri-turnos/staticfiles/'
-
-    # Seguridad extra (recomendado en prod)
+if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
