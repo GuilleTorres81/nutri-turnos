@@ -96,3 +96,16 @@ ul{
 .text-bg-primary{
     background-color: #F48FB1 !important;
 }
+
+#ciudadContainer{
+    border:#F48FB1 3px solid;
+    border-radius: 5px;
+}
+
+#textoCiudad{
+    position: relative;
+    background: #FCE4EC; 
+    padding: 0 10px;
+    margin-bottom: 0;
+    padding: 0;
+}

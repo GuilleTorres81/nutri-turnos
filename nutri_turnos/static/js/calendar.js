@@ -67,7 +67,7 @@ function actualizarDisponibilidad(ciudad) {
                 );
             });
 
-            $('#consultorioDiv').addClass('d-none');
+            // $('#consultorioDiv').addClass('d-none');
             $('#googleMeetDiv > input').prop('checked', true);
 
         } else if (ciudad === 'Tartagal') {
@@ -75,7 +75,7 @@ function actualizarDisponibilidad(ciudad) {
                 return !(date.getDay() === 5);
             });
 
-            $('#consultorioDiv').removeClass('d-none');
+            // $('#consultorioDiv').removeClass('d-none');
         }
 
         calendar.set('disable', reglas);

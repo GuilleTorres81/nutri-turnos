@@ -13,7 +13,7 @@
     <div class="wrapper">
         <section class="hero">
             <div class="d-flex gap-2 justify-content-center">
-                <img id="profile-img" src="https://scontent.fsfn6-1.fna.fbcdn.net/v/t39.30808-6/599937865_3522340871239411_1456355829128464127_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=53a332&_nc_eui2=AeFMyuc8uyXbGC77m1XvfbV1xTiR-AS_3nDFOJH4BL_ecMg5JjfGPooHon_xQ3FFw9U55gfKUPFbO_kzGcPxRtDA&_nc_ohc=3AHo-S8kw0YQ7kNvwHz2dKn&_nc_oc=AdorRVo3Hcr13tBB5wfRhd0jXnEgHBgs61xNGPxEcw_C_jMr3DhCeDsucPIgDCC-9l0&_nc_zt=23&_nc_ht=scontent.fsfn6-1.fna&_nc_gid=DwdH4-rlaZEU18xLa13XMQ&_nc_ss=7a32e&oh=00_Afyp2EmdtdGHi2OXRr4HlEZErc3_RQXwLDTd3Ef067MkWA&oe=69C9763F" alt="Profile Image">
+                <img id="profile-img" src="{% static 'assets/img/profile-hero.webp' %}" alt="Profile Image">
 
                 <div class="d-flex flex-column gap-1 justify-content-center">
                     <h1>María Belén Ramos Jeréz</h1>
@@ -105,7 +105,8 @@
                 {% csrf_token %} 
                 <div class="card rounded" id="calendarCard">
                     <div class="card-body rounded" id="calendarCardBody">
-                        <div class="d-flex col-12 mb-3 justify-content-around gap-2">
+                        <p id="textoCiudad" class="text-center">Reservá un turno en tu ciudad</p>
+                        <div id="ciudadContainer" class="d-flex col-12 mb-3 justify-content-around gap-2 py-2">
                             <div class="d-flex">
                                 <input type="radio" name="ciudad" id="ciudad_1" value="Salta" class="ciudadChecker d-none" checked>
                                 <label for="ciudad_1" class="btn btn-white btn-ciudad fw-bold">Salta</label>
@@ -154,7 +155,7 @@
                                 <div class="d-flex gap-2">
                                     <div id="googleMeetDiv">    
                                         <input type="radio" name="encuentro" id="encuentro_2" value="Google Meet" class="form-check-input" checked>
-                                        <label for="encuentro_2">Google Meet</label>
+                                        <label for="encuentro_2">Virtual (Meet)</label>
                                     </div>
                                     
                                     <div id="consultorioDiv" class="d-none">
