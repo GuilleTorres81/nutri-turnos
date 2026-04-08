@@ -62,6 +62,7 @@ function actualizarDisponibilidad(ciudad) {
             reglas.push(function (date) {
                 return (
                     date.getDay() === 0 ||
+                    date.getDay() === 3 ||
                     date.getDay() === 6 ||
                     date.getDay() === 5
                 );
@@ -72,7 +73,13 @@ function actualizarDisponibilidad(ciudad) {
 
         } else if (ciudad === 'Tartagal') {
             reglas.push(function (date) {
-                return !(date.getDay() === 5);
+                return (
+                    date.getDay() === 0 ||
+                    date.getDay() === 1 ||
+                    date.getDay() === 2 ||
+                    date.getDay() === 3 ||
+                    date.getDay() === 4 
+                );
             });
 
             // $('#consultorioDiv').removeClass('d-none');
