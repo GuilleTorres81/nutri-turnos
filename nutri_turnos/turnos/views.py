@@ -303,3 +303,13 @@ def get_horarios_ajax(request):
         except ValueError:
             return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+def get_ciudades_ajax(request):
+    if request.method == 'GET':
+        try:
+            ciudades = Ciudad.objects.all()
+            ciudades = [ciudad.to_json() for ciudad in ciudades]
+            return JsonResponse({'ciudades': ciudades}, status=200)
+        except ValueError:
+            return JsonResponse({'error': 'Error al obtener ciudades'}, status=400)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)

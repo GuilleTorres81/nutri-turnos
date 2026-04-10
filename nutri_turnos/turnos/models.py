@@ -88,3 +88,11 @@ class Ciudad(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+    def to_json(self):
+        return {
+            'id': self.id,
+            'nombre': self.nombre,
+            'habilitada': self.habilitada,
+            'con_consultorio': self.con_consultorio,
+        }

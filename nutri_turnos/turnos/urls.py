@@ -14,4 +14,5 @@ urlpatterns = [
     path('feriados/', get_feriados_ajax, name='get_feriados'),
     path('get-turnos/', get_turnos_ajax, name='get_turnos'),
     path('get-horarios/', get_horarios_ajax, name='get_horarios'),
+    path('get-ciudades/', get_ciudades_ajax, name='get_ciudades'),
 ]

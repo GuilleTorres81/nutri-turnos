@@ -1,0 +1,41 @@
+#switch[type=checkbox]{
+	height: 0;
+	width: 0;
+	visibility: hidden;
+}
+
+#switchLabel {
+	cursor: pointer;
+	text-indent: -9999px;
+	width: 60px;
+	height: 30px;
+	background: grey;
+	display: block;
+	border-radius: 30px;
+	position: relative;
+}
+
+#switchLabel:after {
+	content: '';
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 26px;
+	height: 26px;
+	background: #fff;
+	border-radius: 26px;
+	transition: 0.3s;
+}
+
+#switch:checked + #switchLabel {
+	background: #F48FB1;
+}
+
+#switch:checked + #switchLabel:after {
+	left: calc(100% - 2px);
+	transform: translateX(-100%);
+}
+
+#switchLabel:active:after {
+	width: 35px;
+}

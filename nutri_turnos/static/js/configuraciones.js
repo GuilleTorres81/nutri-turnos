@@ -1,8 +1,10 @@
 $(document).ready(function(){
-    let url = $('#modalConfiguracion').data('url');
+    let horariosUrl = $('#modalConfiguracion').data('horarios-url');
+    let ciudadesUrl = $('#modalConfiguracion').data('ciudades-url');
+
     // Peticion para obtener los horarios
     $.ajax({
-        url: url,
+        url: horariosUrl,
         type: "GET",
         data: {
             csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
@@ -34,6 +36,26 @@ $(document).ready(function(){
                 $('#diasContainer').append(html);
             });
             
+        }
+    })
+    // Peticion para obtener las ciudades
+    $.ajax({
+        url: ciudadesUrl,
+        type: "GET",
+        data: {
+            csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        success: function(response) {
+            console.log(response);
+            response.ciudades.forEach(ciudad => {
+                let html = `
+                    <option value="${ciudad.id}">
+                        ${ciudad.nombre}
+                    </option>
+                `;
+
+                $('#ciudadSelect').append(html);
+            });
         }
     })
 })
