@@ -56,6 +56,7 @@ class Horario(models.Model):
     dia_semana = models.CharField(max_length=20)
     hora_apertura = models.TimeField()
     hora_cierre = models.TimeField()
+    habilitado = models.BooleanField(default=True)
 
     def __str__(self):
         return f'Horario: {self.dia_semana} de {self.hora_apertura.strftime("%H:%M")} a {self.hora_cierre.strftime("%H:%M")}'
@@ -69,13 +70,21 @@ class Horario(models.Model):
         }
     
 class ConfiguracionTurnos(models.Model):
-    tiempo_entre_turnos = models.DurationField()
+    minutos_entre_turnos = models.IntegerField(default=60)
 
     def __str__(self):
-        return f'Tiempo entre turnos {self.tiempo_entre_turnos} min'
+        return f'Tiempo entre turnos {self.minutos_entre_turnos} min'
     
 class Feriado(models.Model):
     fecha = models.DateField()
 
     def __str__(self):
         return f'Feriado: El {self.fecha.strftime("%d/%m/%Y")}'
+
+class Ciudad(models.Model):
+    nombre = models.CharField(max_length=100)
+    habilitada = models.BooleanField(default=True)
+    con_consultorio = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.nombre
