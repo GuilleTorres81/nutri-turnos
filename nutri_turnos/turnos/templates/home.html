@@ -107,14 +107,24 @@
                     <div class="card-body rounded" id="calendarCardBody">
                         <p id="textoCiudad" class="text-center">Reservá un turno en tu ciudad</p>
                         <div id="ciudadContainer" class="d-flex col-12 mb-3 justify-content-around gap-2 py-2">
-                            <div class="d-flex">
-                                <input type="radio" name="ciudad" id="ciudad_1" value="Salta" class="ciudadChecker d-none" checked>
-                                <label for="ciudad_1" class="btn btn-white btn-ciudad fw-bold">Salta</label>
-                            </div>
-                            <div class="d-flex">
-                                <input type="radio" name="ciudad" id="ciudad_2" value="Tartagal" class="ciudadChecker d-none">
-                                <label for="ciudad_2" class="btn btn-white btn-ciudad fw-bold">Tartagal</label>
-                            </div>
+                            
+                            {% for ciudad in ciudades %}
+                                <div class="d-flex">
+                                    <input 
+                                        type="radio" 
+                                        name="ciudad" 
+                                        id="ciudad_{{ forloop.counter }}" 
+                                        value="{{ ciudad.id }}" 
+                                        class="ciudadChecker d-none"
+                                        {% if forloop.first %}checked{% endif %}
+                                    >
+                                    <label for="ciudad_{{ forloop.counter }}" class="btn btn-white btn-ciudad fw-bold">
+                                        {{ ciudad }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                                
+                            
                         </div>
                         <input type="date" id="calendar" class="custom-control" name="fecha" data-feriados-url="{% url 'turnos:get_feriados' %}" data-horarios-url="{% url 'turnos:get_turnos' %}"/>
                     </div>

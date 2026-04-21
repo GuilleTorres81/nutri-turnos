@@ -50,7 +50,8 @@ def logout_view(request):
 
 # regin HOME
 def turnos_home(request):
-    return render(request, 'home.html')
+    ciudades = Ciudad.objects.filter(habilitada=True).values_list('nombre', flat=True)
+    return render(request, 'home.html', {'ciudades': ciudades})
 
 def registrar_turno(request):
     if request.method != 'POST':

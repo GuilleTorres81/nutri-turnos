@@ -53,6 +53,7 @@ class Turno(models.Model):
         }
     
 class Horario(models.Model):
+    ciudad = models.ForeignKey('Ciudad', on_delete=models.SET_NULL, null=True, blank=True, related_name='horarios')
     dia_semana = models.CharField(max_length=20)
     hora_apertura = models.TimeField()
     hora_cierre = models.TimeField()
@@ -85,7 +86,6 @@ class Ciudad(models.Model):
     nombre = models.CharField(max_length=100)
     habilitada = models.BooleanField(default=True)
     con_consultorio = models.BooleanField(default=False)
-
     def __str__(self):
         return self.nombre
     
