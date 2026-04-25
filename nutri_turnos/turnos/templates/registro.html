@@ -77,7 +77,12 @@
 </div>
 
 <!-- MODAL DE CONFIGURACIÓN -->
-    <div class="modal" tabindex="-1" id="modalConfiguracion" data-horarios-url="{% url 'turnos:get_horarios' %}" data-ciudades-url="{% url 'turnos:get_ciudades' %}">
+    <div class="modal" tabindex="-1" id="modalConfiguracion"
+        data-horarios-url="{% url 'turnos:get_horarios' %}"
+        data-ciudades-url="{% url 'turnos:get_ciudades' %}"
+        data-update-horario-url="{% url 'turnos:update_horario' 0 %}"
+        data-update-ciudad-url="{% url 'turnos:update_ciudad' 0 %}"
+    >
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
@@ -86,32 +91,21 @@
             </div>
             <div class="modal-body">
                 {% csrf_token %}
-                <div id="ciudadesContainer" class="d-flex flex-wrap gap-2 justify-content-center mb-2">
-                    <div class="col-6">
-                        <select id="ciudadSelect" class="form-control">
-                            <option value="" class="d-none" selected>Selecciona una ciudad</option>
-                        </select>
-                    </div>
-                    <button type="button" class="btn btn-primary">Agregar Ciudad</button>
-                </div>
+
+                <!-- CIUDADES -->
+                <h6 class="fw-bold">Ciudades</h6>
+                <div id="ciudadesContainer" class="d-flex flex-wrap gap-2 justify-content-center mb-3"></div>
+
+                <!-- HORARIOS -->
+                <h6 class="fw-bold">Días y horarios</h6>
                 <div id="diasContainer" class="d-flex flex-wrap gap-2 justify-content-center mb-2"></div>
-                <div id="horariosContainer" class="d-flex gap-2 justify-content-center align-items-center">
-                    <div>
-                        <label 
-                            for="diaHabilitado" 
-                            class="btn btn-outline-primary"
-                        >
-                            Habilitado
-                        </label>
-                        <input 
-                            type="checkbox" 
-                            class="d-none" 
-                            id="diaHabilitado" 
-                            name="habilitado" 
-                        >
-                    </div>
-                    <input type="time" id="horaApertura" name="hora_apertura" value="" class="form-control">
-                    <input type="time" id="horaCierre" name="hora_cierre" value="" class="form-control">
+
+                <div id="horariosContainer" class="d-flex gap-2 justify-content-center align-items-center mt-2" style="display:none !important">
+                    <select id="ciudadHorarioSelect" class="form-control">
+                        <option value="">Sin ciudad</option>
+                    </select>
+                    <input type="time" id="horaApertura" name="hora_apertura" class="form-control">
+                    <input type="time" id="horaCierre" name="hora_cierre" class="form-control">
                 </div>
             </div>
             <div class="modal-footer">

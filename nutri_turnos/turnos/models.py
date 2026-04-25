@@ -57,8 +57,6 @@ class Horario(models.Model):
     dia_semana = models.CharField(max_length=20)
     hora_apertura = models.TimeField()
     hora_cierre = models.TimeField()
-    habilitado = models.BooleanField(default=True)
-
     def __str__(self):
         return f'Horario: {self.dia_semana} de {self.hora_apertura.strftime("%H:%M")} a {self.hora_cierre.strftime("%H:%M")}'
     
@@ -68,6 +66,7 @@ class Horario(models.Model):
             'dia_semana': self.dia_semana,
             'hora_apertura': self.hora_apertura.strftime('%H:%M'),
             'hora_cierre': self.hora_cierre.strftime('%H:%M'),
+            'ciudad_id': self.ciudad_id,
         }
     
 class ConfiguracionTurnos(models.Model):

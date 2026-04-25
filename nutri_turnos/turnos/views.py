@@ -50,7 +50,7 @@ def logout_view(request):
 
 # regin HOME
 def turnos_home(request):
-    ciudades = Ciudad.objects.filter(habilitada=True).values_list('nombre', flat=True)
+    ciudades = Ciudad.objects.filter(habilitada=True)
     return render(request, 'home.html', {'ciudades': ciudades})
 
 def registrar_turno(request):
@@ -288,9 +288,13 @@ def get_turnos_ajax(request):
             turnos = Turno.objects.filter(fecha_hora__date=fecha)
             turnos_data = [turno.to_json() for turno in turnos]
             
-            horarios_data = [horario.to_json() for horario in Horario.objects.filter(dia_semana=fecha.strftime('%A'))]
-            
-            return JsonResponse({'turnos': turnos_data, 'horarios': list(horarios_data)}, status=200)
+            ciudad_id = request.GET.get('ciudad_id')
+            qs = Horario.objects.filter(dia_semana=fecha.strftime('%A'))
+            if ciudad_id:
+                qs = qs.filter(ciudad_id=ciudad_id)
+            horarios_data = [horario.to_json() for horario in qs]
+
+            return JsonResponse({'turnos': turnos_data, 'horarios': horarios_data}, status=200)
         except ValueError:
             return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
@@ -305,6 +309,16 @@ def get_horarios_ajax(request):
             return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
+def get_dias_habilitados(request):
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    ciudad_id = request.GET.get('ciudad_id')
+    qs = Horario.objects.all()
+    if ciudad_id:
+        qs = qs.filter(ciudad_id=ciudad_id)
+    dias = list(qs.values_list('dia_semana', flat=True))
+    return JsonResponse({'dias_habilitados': dias})
+
 def get_ciudades_ajax(request):
     if request.method == 'GET':
         try:
@@ -314,3 +328,34 @@ def get_ciudades_ajax(request):
         except ValueError:
             return JsonResponse({'error': 'Error al obtener ciudades'}, status=400)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+import json
+
+def update_horario(request, horario_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    try:
+        horario = get_object_or_404(Horario, id=horario_id)
+        data = json.loads(request.body)
+        horario.hora_apertura = data.get('hora_apertura', horario.hora_apertura)
+        horario.hora_cierre = data.get('hora_cierre', horario.hora_cierre)
+        ciudad_id = data.get('ciudad_id')
+        horario.ciudad = Ciudad.objects.get(id=ciudad_id) if ciudad_id else None
+        horario.save()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+def update_ciudad(request, ciudad_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    try:
+        ciudad = get_object_or_404(Ciudad, id=ciudad_id)
+        data = json.loads(request.body)
+        ciudad.habilitada = data.get('habilitada', ciudad.habilitada)
+        ciudad.save()
+        if not ciudad.habilitada:
+            Horario.objects.filter(ciudad=ciudad).update(ciudad=None)
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

@@ -1,77 +1,142 @@
-$(document).ready(function(){
-    let horariosUrl = $('#modalConfiguracion').data('horarios-url');
-    let ciudadesUrl = $('#modalConfiguracion').data('ciudades-url');
+const DIAS_ES = {
+    Monday: 'Lunes',
+    Tuesday: 'Martes',
+    Wednesday: 'Miércoles',
+    Thursday: 'Jueves',
+    Friday: 'Viernes',
+    Saturday: 'Sábado',
+    Sunday: 'Domingo',
+};
 
-    // Peticion para obtener los horarios
-    $.ajax({
-        url: horariosUrl,
-        type: "GET",
-        data: {
-            csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
-        },
-        success: function(response) {
-            console.log(response);
-            response.horarios.forEach(horario => {
-                let html = `
-                    <div>
-                        <label 
-                            for="horario_${horario.id}" 
-                            class="btn btn-white diaButton"
-                            data-apertura="${horario.hora_apertura}"
-                            data-cierre="${horario.hora_cierre}"
-                        >
-                            ${horario.dia_semana}
-                        </label>
+const ORDEN_DIAS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-                        <input 
-                            type="radio" 
-                            class="d-none" 
-                            id="horario_${horario.id}" 
-                            name="horario" 
-                            value="${horario.id}"
-                        >
-                    </div>
-                `;
+$(document).ready(function () {
+    const $modal = $('#modalConfiguracion');
+    const horariosUrl = $modal.data('horarios-url');
+    const ciudadesUrl = $modal.data('ciudades-url');
+    const updateHorarioBase = $modal.data('update-horario-url');
+    const updateCiudadBase = $modal.data('update-ciudad-url');
+    const csrf = $('input[name="csrfmiddlewaretoken"]').first().val();
 
-                $('#diasContainer').append(html);
-            });
-            
-        }
-    })
-    // Peticion para obtener las ciudades
-    $.ajax({
-        url: ciudadesUrl,
-        type: "GET",
-        data: {
-            csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
-        },
-        success: function(response) {
-            console.log(response);
-            response.ciudades.forEach(ciudad => {
-                let html = `
-                    <option value="${ciudad.id}">
-                        ${ciudad.nombre}
-                    </option>
-                `;
+    function horarioUrl(id) {
+        return updateHorarioBase.replace('/0/', `/${id}/`);
+    }
+    function ciudadUrl(id) {
+        return updateCiudadBase.replace('/0/', `/${id}/`);
+    }
 
-                $('#ciudadSelect').append(html);
-            });
-        }
-    })
-})
+    // Cargar ciudades
+    $.get(ciudadesUrl, function (response) {
+        response.ciudades.forEach(ciudad => {
+            const btnClass = ciudad.habilitada ? 'btn-success' : 'btn-outline-secondary';
+            $('#ciudadesContainer').append(`
+                <button type="button"
+                    class="btn btn-sm ${btnClass} ciudadToggle"
+                    data-id="${ciudad.id}"
+                    data-habilitada="${ciudad.habilitada ? '1' : '0'}"
+                >
+                    ${ciudad.nombre}
+                </button>
+            `);
+            $('#ciudadHorarioSelect').append(
+                `<option value="${ciudad.id}">${ciudad.nombre}</option>`
+            );
+        });
+    });
 
-$('#diasContainer').on('click', '.diaButton', function () {
+    // Cargar horarios
+    $.get(horariosUrl, function (response) {
+        const horarios = response.horarios.sort(
+            (a, b) => ORDEN_DIAS.indexOf(a.dia_semana) - ORDEN_DIAS.indexOf(b.dia_semana)
+        );
+        horarios.forEach(horario => {
+            const tieneciudad = !!horario.ciudad_id;
+            $('#diasContainer').append(`
+                <button type="button"
+                    class="btn btn-sm ${tieneciudad ? 'btn-primary' : 'btn-outline-secondary'} diaButton"
+                    data-id="${horario.id}"
+                    data-apertura="${horario.hora_apertura}"
+                    data-cierre="${horario.hora_cierre}"
+                    data-ciudad="${horario.ciudad_id ?? ''}"
+                >
+                    ${DIAS_ES[horario.dia_semana] ?? horario.dia_semana}
+                </button>
+            `);
+        });
+    });
 
-    const radioId = $(this).attr('for');
-    $('#' + radioId).prop('checked', true);
+    // Seleccionar día → cargar sus datos en los controles
+    $('#diasContainer').on('click', '.diaButton', function () {
+        $('.diaButton').removeClass('ring-active');
+        $(this).addClass('ring-active');
+        $('#horaApertura').val($(this).data('apertura'));
+        $('#horaCierre').val($(this).data('cierre'));
+        $('#ciudadHorarioSelect').val($(this).data('ciudad') || '');
+        $('#horariosContainer').show();
+    });
 
-    $('.diaButton').removeClass('active');
-    $(this).addClass('active');
+    // Toggle habilitado de ciudad
+    $('#ciudadesContainer').on('click', '.ciudadToggle', function () {
+        const $btn = $(this);
+        const id = $btn.data('id');
+        const nuevoEstado = $btn.data('habilitada') != '1';
 
-    const apertura = $(this).data('apertura');
-    const cierre = $(this).data('cierre');
+        $.ajax({
+            url: ciudadUrl(id),
+            type: 'POST',
+            contentType: 'application/json',
+            headers: { 'X-CSRFToken': csrf },
+            data: JSON.stringify({ habilitada: nuevoEstado }),
+            success: function () {
+                $btn.data('habilitada', nuevoEstado ? '1' : '0')
+                    .toggleClass('btn-success', nuevoEstado)
+                    .toggleClass('btn-outline-secondary', !nuevoEstado);
 
-    $('#horaApertura').val(apertura);
-    $('#horaCierre').val(cierre);
+                if (!nuevoEstado) {
+                    const ciudadId = String($btn.data('id'));
+                    $('.diaButton').each(function () {
+                        if (String($(this).data('ciudad')) === ciudadId) {
+                            $(this).data('ciudad', '')
+                                .removeClass('btn-primary')
+                                .addClass('btn-outline-secondary');
+                        }
+                    });
+                }
+            }
+        });
+    });
 
+    // Guardar cambios del día seleccionado
+    $('#botonGuardarCambios').on('click', function () {
+        const $diaActivo = $('.diaButton.ring-active');
+        if (!$diaActivo.length) return;
+
+        const id = $diaActivo.data('id');
+        const hora_apertura = $('#horaApertura').val();
+        const hora_cierre = $('#horaCierre').val();
+        const ciudad_id = $('#ciudadHorarioSelect').val() || null;
+
+        $.ajax({
+            url: horarioUrl(id),
+            type: 'POST',
+            contentType: 'application/json',
+            headers: { 'X-CSRFToken': csrf },
+            data: JSON.stringify({ hora_apertura, hora_cierre, ciudad_id }),
+            success: function () {
+                const tieneciudad = !!ciudad_id;
+                $diaActivo
+                    .data('apertura', hora_apertura)
+                    .data('cierre', hora_cierre)
+                    .data('ciudad', ciudad_id || '')
+                    .toggleClass('btn-primary', tieneciudad)
+                    .toggleClass('btn-outline-secondary', !tieneciudad);
+            }
+        });
+    });
+
+    // Ocultar panel de horario al abrir el modal
+    $('#modalConfiguracion').on('show.bs.modal', function () {
+        $('#horariosContainer').hide();
+        $('.diaButton').removeClass('ring-active');
+    });
 });
