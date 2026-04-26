@@ -2,11 +2,13 @@
 const DIA_SEMANA = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 let calendar;
+let delta = 60;
 
 $(document).ready(function () {
     const $calendar = $('#calendar');
     const diasUrl = $calendar.data('dias-url');
     const horariosUrl = $calendar.data('horarios-url');
+    delta = parseInt($calendar.data('delta')) || 60;
 
     const optional_config = {
         altInput: true,
@@ -144,7 +146,7 @@ function mostrarHorarios(horarios, turnos) {
         const inicioMin = hInicio * 60 + mInicio;
         const finMin = hFin * 60 + mFin;
 
-        for (let min = inicioMin; min <= finMin; min += 60) {
+        for (let min = inicioMin; min <= finMin; min += delta) {
             const horaStr = `${Math.floor(min / 60).toString().padStart(2, '0')}:${(min % 60).toString().padStart(2, '0')}`;
             const disabled = horasOcupadas.includes(horaStr);
 

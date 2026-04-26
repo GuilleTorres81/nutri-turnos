@@ -1,0 +1,17 @@
+<div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+
+    <h2 style="color: #0d6efd;">📅 Nuevo turno agendado</h2>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <tr><td style="padding: 6px 0; color: #555;">Paciente</td><td><b>{{ turno.nombre }} {{ turno.apellido }}</b></td></tr>
+        <tr><td style="padding: 6px 0; color: #555;">Fecha y hora</td><td><b>{{ turno.fecha|date:"j \d\e F" }} a las {{ turno.hora }}</b></td></tr>
+        <tr><td style="padding: 6px 0; color: #555;">Motivo</td><td>{{ turno.motivo }}</td></tr>
+        <tr><td style="padding: 6px 0; color: #555;">Modalidad</td><td>{{ turno.encuentro }}</td></tr>
+        <tr><td style="padding: 6px 0; color: #555;">Ciudad</td><td>{{ turno.ciudad }}</td></tr>
+        <tr><td style="padding: 6px 0; color: #555;">Teléfono</td><td>{{ turno.telefono }}</td></tr>
+        <tr><td style="padding: 6px 0; color: #555;">Email</td><td>{{ turno.email }}</td></tr>
+        <tr><td style="padding: 6px 0; color: #555;">Edad</td><td>{{ turno.edad }} años</td></tr>
+        {% if turno.obra_social %}<tr><td style="padding: 6px 0; color: #555;">Obra social</td><td>{{ turno.obra_social }}</td></tr>{% endif %}
+    </table>
+
+</div>

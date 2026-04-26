@@ -51,7 +51,9 @@ def logout_view(request):
 # regin HOME
 def turnos_home(request):
     ciudades = Ciudad.objects.filter(habilitada=True)
-    return render(request, 'home.html', {'ciudades': ciudades})
+    config = ConfiguracionTurnos.objects.first()
+    delta = config.minutos_entre_turnos if config else 60
+    return render(request, 'home.html', {'ciudades': ciudades, 'delta': delta})
 
 def registrar_turno(request):
     if request.method != 'POST':
@@ -109,6 +111,11 @@ def registrar_turno(request):
             enviar_confirmacion_turno(turno.id)
         except Exception as e:
             print(f"Error al enviar email de confirmación: {e}")
+
+        try:
+            enviar_notificacion_profesional(turno.id)
+        except Exception as e:
+            print(f"Error al enviar notificación al profesional: {e}")
             
         return JsonResponse({
             'message': 'Turno registrado correctamente',
@@ -143,6 +150,23 @@ def enviar_confirmacion_turno(turno_id):
     })
     
     
+def enviar_notificacion_profesional(turno_id):
+    turno = get_object_or_404(Turno, id=turno_id)
+    config = ConfiguracionTurnos.objects.first()
+    email_destino = config.email_notificaciones if config and config.email_notificaciones else None
+    if not email_destino:
+        return
+
+    html_content = render_to_string('emails/notificacion_profesional.html', {'turno': turno})
+
+    resend.Emails.send({
+        "from": settings.DEFAULT_FROM_EMAIL,
+        "to": [email_destino],
+        "subject": f"Nuevo turno: {turno.nombre} {turno.apellido} - {turno.fecha.strftime('%d/%m/%Y')} {turno.hora.strftime('%H:%M')}",
+        "html": html_content,
+    })
+
+
 def cancelar_turno_por_mail(request, token):
     turno_id = validar_token(token)
 
@@ -369,6 +393,32 @@ def get_ciudades_ajax(request):
         except ValueError:
             return JsonResponse({'error': 'Error al obtener ciudades'}, status=400)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+def get_configuracion(request):
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    config = ConfiguracionTurnos.objects.first()
+    if not config:
+        return JsonResponse({'minutos_entre_turnos': 60, 'email_notificaciones': ''})
+    return JsonResponse({
+        'minutos_entre_turnos': config.minutos_entre_turnos,
+        'email_notificaciones': config.email_notificaciones or '',
+    })
+
+def update_configuracion(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    try:
+        data = json.loads(request.body)
+        config, _ = ConfiguracionTurnos.objects.get_or_create(pk=1)
+        if 'minutos_entre_turnos' in data:
+            config.minutos_entre_turnos = int(data['minutos_entre_turnos'])
+        if 'email_notificaciones' in data:
+            config.email_notificaciones = data['email_notificaciones']
+        config.save()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 import json
 

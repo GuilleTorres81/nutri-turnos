@@ -127,7 +127,7 @@
                                 
                             
                         </div>
-                        <input type="date" id="calendar" class="custom-control" name="fecha" data-feriados-url="{% url 'turnos:get_feriados' %}" data-horarios-url="{% url 'turnos:get_turnos' %}" data-dias-url="{% url 'turnos:get_dias_habilitados' %}"/>
+                        <input type="date" id="calendar" class="custom-control" name="fecha" data-feriados-url="{% url 'turnos:get_feriados' %}" data-horarios-url="{% url 'turnos:get_turnos' %}" data-dias-url="{% url 'turnos:get_dias_habilitados' %}" data-delta="{{ delta }}"/>
                     </div>
                 </div>
                 <div class="card rounded d-none" id="turnoCard">

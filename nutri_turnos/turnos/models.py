@@ -71,6 +71,7 @@ class Horario(models.Model):
     
 class ConfiguracionTurnos(models.Model):
     minutos_entre_turnos = models.IntegerField(default=60)
+    email_notificaciones = models.EmailField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f'Tiempo entre turnos {self.minutos_entre_turnos} min'

@@ -18,6 +18,8 @@ $(document).ready(function () {
     const updateCiudadBase = $modal.data('update-ciudad-url');
     const crearCiudadUrl = $modal.data('crear-ciudad-url');
     const eliminarCiudadBase = $modal.data('eliminar-ciudad-url');
+    const getConfiguracionUrl = $modal.data('get-configuracion-url');
+    const updateConfiguracionUrl = $modal.data('update-configuracion-url');
     const csrf = $('input[name="csrfmiddlewaretoken"]').first().val();
 
     function horarioUrl(id) {
@@ -240,5 +242,37 @@ $(document).ready(function () {
         $('.diaButton').removeClass('ring-active');
         clearTimeout(messageTimer);
         $('#messageBox').text('').removeClass('text-success text-danger');
+
+        $.get(getConfiguracionUrl, function (data) {
+            $('#deltaTurnos').val(data.minutos_entre_turnos);
+            $('#emailContacto').val(data.email_notificaciones);
+        });
+    });
+
+    $('#btnGuardarDelta').on('click', function () {
+        const minutos = parseInt($('#deltaTurnos').val());
+        if (isNaN(minutos) || minutos < 0) return;
+        $.ajax({
+            url: updateConfiguracionUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            headers: { 'X-CSRFToken': csrf },
+            data: JSON.stringify({ minutos_entre_turnos: minutos }),
+            success: () => showMessage('Tiempo entre turnos actualizado'),
+            error: () => showMessage('Error al guardar', 'danger'),
+        });
+    });
+
+    $('#btnGuardarEmail').on('click', function () {
+        const email = $('#emailContacto').val().trim();
+        $.ajax({
+            url: updateConfiguracionUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            headers: { 'X-CSRFToken': csrf },
+            data: JSON.stringify({ email_notificaciones: email }),
+            success: () => showMessage('Correo de notificaciones actualizado'),
+            error: () => showMessage('Error al guardar', 'danger'),
+        });
     });
 });
