@@ -93,11 +93,26 @@
                 {% csrf_token %}
 
                 <!-- CIUDADES -->
-                <h6 class="fw-bold">Ciudades</h6>
-                <div id="ciudadesContainer" class="d-flex flex-wrap gap-2 justify-content-center mb-3"></div>
+                <div class="d-flex">
+                    <h6 class="fw-bold">Ciudades</h6>
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Haz clic en una ciudad para habilitarla o deshabilitarla. No es necesario guardar cambios para que surta efecto. Las ciudades deshabilitadas no aparecerán como opción en el formulario de turnos.">
+                        <i class="fas fa-info-circle text-secondary"></i>
+                </span>
+                </div>
+                <div class="text-center mb-3">
+                    <div id="ciudadesContainer" class="d-flex flex-wrap gap-2 justify-content-center mb-3"></div>
+                </div>
 
                 <!-- HORARIOS -->
-                <h6 class="fw-bold">Días y horarios</h6>
+                <div class="d-flex">
+                    <h6 class="fw-bold">Días y horarios</h6>
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Para modificar los horarios, haz clic en el día que deseas configurar:
+    - Luego, configura la ciudad y el horario a tu gusto.
+    - Finalmente, haz clic en Guardar Cambios para aplicar la configuración. 
+    - Los dias sin ciudad asignada no estarán disponibles en el formulario de turnos.">
+                        <i class="fas fa-info-circle text-secondary"></i>
+                    </span>
+                </div>
                 <div id="diasContainer" class="d-flex flex-wrap gap-2 justify-content-center mb-2"></div>
 
                 <div id="horariosContainer" class="d-flex gap-2 justify-content-center align-items-center mt-2" style="display:none !important">
@@ -108,7 +123,8 @@
                     <input type="time" id="horaCierre" name="hora_cierre" class="form-control">
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer justify-content-between align-items-center">
+                <p id="messageBox" class="text-success">Mensaje de información</p>
                 <button type="button" class="btn btn-primary" id="botonGuardarCambios">Guardar Cambios</button>
             </div>
             </div>

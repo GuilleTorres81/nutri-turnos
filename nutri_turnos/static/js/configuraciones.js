@@ -75,6 +75,16 @@ $(document).ready(function () {
         $('#horariosContainer').show();
     });
 
+    let messageTimer = null;
+    function showMessage(texto, tipo = 'success') {
+        clearTimeout(messageTimer);
+        $('#messageBox')
+            .text(texto)
+            .removeClass('text-success text-danger')
+            .addClass(`text-${tipo}`);
+        messageTimer = setTimeout(() => $('#messageBox').text('').removeClass('text-success text-danger'), 2500);
+    }
+
     // Toggle habilitado de ciudad
     $('#ciudadesContainer').on('click', '.ciudadToggle', function () {
         const $btn = $(this);
@@ -91,6 +101,7 @@ $(document).ready(function () {
                 $btn.data('habilitada', nuevoEstado ? '1' : '0')
                     .toggleClass('btn-success', nuevoEstado)
                     .toggleClass('btn-outline-secondary', !nuevoEstado);
+                showMessage(`${$btn.text().trim()} ${nuevoEstado ? 'habilitada' : 'deshabilitada'}`, nuevoEstado ? 'success' : 'danger');
 
                 if (!nuevoEstado) {
                     const ciudadId = String($btn.data('id'));
@@ -130,6 +141,7 @@ $(document).ready(function () {
                     .data('ciudad', ciudad_id || '')
                     .toggleClass('btn-primary', tieneciudad)
                     .toggleClass('btn-outline-secondary', !tieneciudad);
+                showMessage(`Horario de ${$diaActivo.text().trim()} actualizado`);
             }
         });
     });
@@ -138,5 +150,7 @@ $(document).ready(function () {
     $('#modalConfiguracion').on('show.bs.modal', function () {
         $('#horariosContainer').hide();
         $('.diaButton').removeClass('ring-active');
+        clearTimeout(messageTimer);
+        $('#messageBox').text('').removeClass('text-success text-danger');
     });
 });
