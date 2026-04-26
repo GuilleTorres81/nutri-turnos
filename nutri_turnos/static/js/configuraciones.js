@@ -77,11 +77,12 @@ $(document).ready(function () {
 
     let messageTimer = null;
     function showMessage(texto, tipo = 'success') {
+        const clasePermitida = tipo === 'danger' ? 'text-danger' : 'text-success';
         clearTimeout(messageTimer);
         $('#messageBox')
             .text(texto)
             .removeClass('text-success text-danger')
-            .addClass(`text-${tipo}`);
+            .addClass(clasePermitida);
         messageTimer = setTimeout(() => $('#messageBox').text('').removeClass('text-success text-danger'), 2500);
     }
 
