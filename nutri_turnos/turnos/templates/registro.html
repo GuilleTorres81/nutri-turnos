@@ -129,7 +129,25 @@
                         </button>
                     </div>
                 </div>
-
+                <div>
+                    <h6 class="fw-bold">Configuraciones adicionales</h6>
+                </div>
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <label for="deltaTurnos">Tiempo entre turnos: </label>
+                    <input type="number" id="deltaTurnos" class="form-control form-control-sm w-auto text-center" min="0" max="120" value="60"> 
+                    <span class="text-muted"> minutos</span>
+                    <button class="btn btn-sm btn-success" id="btnGuardarDelta">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </div>
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <label for="emailContacto">Correo de notificaciones: </label>
+                    <input type="email" id="emailContacto" class="form-control form-control-sm w-auto" placeholder="example@example.com">
+                    <button class="btn btn-sm btn-success" id="btnGuardarEmail">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </div>
+                
                 <!-- HORARIOS -->
                 <div class="d-flex">
                     <h6 class="fw-bold">Días y horarios</h6>
