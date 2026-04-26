@@ -17,5 +17,7 @@ urlpatterns = [
     path('get-ciudades/', get_ciudades_ajax, name='get_ciudades'),
     path('update-horario/<int:horario_id>/', update_horario, name='update_horario'),
     path('update-ciudad/<int:ciudad_id>/', update_ciudad, name='update_ciudad'),
+    path('crear-ciudad/', crear_ciudad, name='crear_ciudad'),
+    path('eliminar-ciudad/<int:ciudad_id>/', eliminar_ciudad, name='eliminar_ciudad'),
     path('get-dias-habilitados/', get_dias_habilitados, name='get_dias_habilitados'),
 ]

@@ -37,7 +37,17 @@ $(document).ready(function () {
 
     const ciudadInicial = $('.ciudadChecker:checked').val();
     actualizarDisponibilidad(ciudadInicial);
+    actualizarConsultorio();
 });
+
+function actualizarConsultorio() {
+    const $checked = $('.ciudadChecker:checked');
+    const conConsultorio = $checked.data('con-consultorio') == '1';
+    $('#consultorioDiv').toggleClass('d-none', !conConsultorio);
+    if (!conConsultorio) {
+        $('#encuentro_2').prop('checked', true);
+    }
+}
 
 function actualizarDisponibilidad(ciudadId) {
     const diasUrl = $('#calendar').data('dias-url');
@@ -66,6 +76,7 @@ function actualizarDisponibilidad(ciudadId) {
 
 $('.ciudadChecker').change(function () {
     actualizarDisponibilidad($(this).val());
+    actualizarConsultorio();
 });
 
 $('#diasContainer').on('click', '.diaButton', function () {

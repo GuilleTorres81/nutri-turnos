@@ -82,6 +82,8 @@
         data-ciudades-url="{% url 'turnos:get_ciudades' %}"
         data-update-horario-url="{% url 'turnos:update_horario' 0 %}"
         data-update-ciudad-url="{% url 'turnos:update_ciudad' 0 %}"
+        data-crear-ciudad-url="{% url 'turnos:crear_ciudad' %}"
+        data-eliminar-ciudad-url="{% url 'turnos:eliminar_ciudad' 0 %}"
     >
         <div class="modal-dialog">
             <div class="modal-content">
@@ -97,10 +99,16 @@
                     <h6 class="fw-bold">Ciudades</h6>
                     <span data-bs-toggle="tooltip" data-bs-placement="top" title="Haz clic en una ciudad para habilitarla o deshabilitarla. No es necesario guardar cambios para que surta efecto. Las ciudades deshabilitadas no aparecerán como opción en el formulario de turnos.">
                         <i class="fas fa-info-circle text-secondary"></i>
-                </span>
+                    </span>
                 </div>
                 <div class="text-center mb-3">
-                    <div id="ciudadesContainer" class="d-flex flex-wrap gap-2 justify-content-center mb-3"></div>
+                    <div id="ciudadesContainer" class="d-flex flex-wrap gap-2 flex-column align-items-center mb-2"></div>
+                    <div class="d-flex gap-2 justify-content-center mt-2">
+                        <input type="text" id="nuevaCiudadInput" class="form-control form-control-sm w-auto" placeholder="Nueva ciudad...">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnCrearCiudad">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- HORARIOS -->
@@ -114,7 +122,7 @@
                     </span>
                 </div>
                 <div id="diasContainer" class="d-flex flex-wrap gap-2 justify-content-center mb-2"></div>
-
+                <p id="horariosInfo" class="text-secondary text-center"></p>
                 <div id="horariosContainer" class="d-flex gap-2 justify-content-center align-items-center mt-2" style="display:none !important">
                     <select id="ciudadHorarioSelect" class="form-control">
                         <option value="">Sin ciudad</option>
@@ -124,7 +132,7 @@
                 </div>
             </div>
             <div class="modal-footer justify-content-between align-items-center">
-                <p id="messageBox" class="text-success">Mensaje de información</p>
+                <p id="messageBox" class="text-success"></p>
                 <button type="button" class="btn btn-primary" id="botonGuardarCambios">Guardar Cambios</button>
             </div>
             </div>

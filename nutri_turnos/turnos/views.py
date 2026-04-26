@@ -353,9 +353,34 @@ def update_ciudad(request, ciudad_id):
         ciudad = get_object_or_404(Ciudad, id=ciudad_id)
         data = json.loads(request.body)
         ciudad.habilitada = data.get('habilitada', ciudad.habilitada)
+        ciudad.con_consultorio = data.get('con_consultorio', ciudad.con_consultorio)
         ciudad.save()
         if not ciudad.habilitada:
             Horario.objects.filter(ciudad=ciudad).update(ciudad=None)
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+def crear_ciudad(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    try:
+        data = json.loads(request.body)
+        nombre = data.get('nombre', '').strip()
+        if not nombre:
+            return JsonResponse({'error': 'El nombre es obligatorio'}, status=400)
+        ciudad = Ciudad.objects.create(nombre=nombre)
+        return JsonResponse({'success': True, 'ciudad': ciudad.to_json()}, status=201)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+def eliminar_ciudad(request, ciudad_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    try:
+        ciudad = get_object_or_404(Ciudad, id=ciudad_id)
+        Horario.objects.filter(ciudad=ciudad).update(ciudad=None)
+        ciudad.delete()
         return JsonResponse({'success': True})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)

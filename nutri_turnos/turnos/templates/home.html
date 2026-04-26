@@ -116,6 +116,7 @@
                                         id="ciudad_{{ forloop.counter }}" 
                                         value="{{ ciudad.id }}" 
                                         class="ciudadChecker d-none"
+                                        data-con-consultorio="{{ ciudad.con_consultorio|yesno:'1,0' }}"
                                         {% if forloop.first %}checked{% endif %}
                                     >
                                     <label for="ciudad_{{ forloop.counter }}" class="btn btn-white btn-ciudad fw-bold">

@@ -16,6 +16,8 @@ $(document).ready(function () {
     const ciudadesUrl = $modal.data('ciudades-url');
     const updateHorarioBase = $modal.data('update-horario-url');
     const updateCiudadBase = $modal.data('update-ciudad-url');
+    const crearCiudadUrl = $modal.data('crear-ciudad-url');
+    const eliminarCiudadBase = $modal.data('eliminar-ciudad-url');
     const csrf = $('input[name="csrfmiddlewaretoken"]').first().val();
 
     function horarioUrl(id) {
@@ -24,24 +26,40 @@ $(document).ready(function () {
     function ciudadUrl(id) {
         return updateCiudadBase.replace('/0/', `/${id}/`);
     }
+    function eliminarCiudadUrl(id) {
+        return eliminarCiudadBase.replace('/0/', `/${id}/`);
+    }
 
-    // Cargar ciudades
-    $.get(ciudadesUrl, function (response) {
-        response.ciudades.forEach(ciudad => {
-            const btnClass = ciudad.habilitada ? 'btn-success' : 'btn-outline-secondary';
-            $('#ciudadesContainer').append(`
+    function renderCiudad(ciudad) {
+        const btnClass = ciudad.habilitada ? 'btn-success' : 'btn-outline-secondary';
+        const consultorioIcon = ciudad.con_consultorio
+            ? '<i class="fas fa-clinic-medical ms-1" title="Con consultorio"></i>'
+            : '';
+        const $wrapper = $(`
+            <div class="d-inline-flex align-items-center gap-1 ciudadWrapper" data-id="${ciudad.id}">
                 <button type="button"
                     class="btn btn-sm ${btnClass} ciudadToggle"
                     data-id="${ciudad.id}"
                     data-habilitada="${ciudad.habilitada ? '1' : '0'}"
+                    data-con-consultorio="${ciudad.con_consultorio ? '1' : '0'}"
                 >
-                    ${ciudad.nombre}
+                    ${ciudad.nombre}${consultorioIcon}
                 </button>
-            `);
-            $('#ciudadHorarioSelect').append(
-                `<option value="${ciudad.id}">${ciudad.nombre}</option>`
-            );
-        });
+                <button type="button" class="btn btn-sm btn-outline-info consultorioToggle" title="Toggle consultorio" data-id="${ciudad.id}">
+                    <i class="fas fa-clinic-medical"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger ciudadEliminar" title="Eliminar ciudad" data-id="${ciudad.id}" data-nombre="${ciudad.nombre}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `);
+        $('#ciudadesContainer').append($wrapper);
+        $('#ciudadHorarioSelect').append(`<option value="${ciudad.id}">${ciudad.nombre}</option>`);
+    }
+
+    // Cargar ciudades
+    $.get(ciudadesUrl, function (response) {
+        response.ciudades.forEach(renderCiudad);
     });
 
     // Cargar horarios
@@ -73,6 +91,7 @@ $(document).ready(function () {
         $('#horaCierre').val($(this).data('cierre'));
         $('#ciudadHorarioSelect').val($(this).data('ciudad') || '');
         $('#horariosContainer').show();
+        $('#horariosInfo').text(`Configurando ${$(this).text().trim()}`);
     });
 
     let messageTimer = null;
@@ -105,7 +124,7 @@ $(document).ready(function () {
                 showMessage(`${$btn.text().trim()} ${nuevoEstado ? 'habilitada' : 'deshabilitada'}`, nuevoEstado ? 'success' : 'danger');
 
                 if (!nuevoEstado) {
-                    const ciudadId = String($btn.data('id'));
+                    const ciudadId = String(id);
                     $('.diaButton').each(function () {
                         if (String($(this).data('ciudad')) === ciudadId) {
                             $(this).data('ciudad', '')
@@ -114,6 +133,74 @@ $(document).ready(function () {
                         }
                     });
                 }
+            }
+        });
+    });
+
+    // Toggle con_consultorio
+    $('#ciudadesContainer').on('click', '.consultorioToggle', function () {
+        const id = $(this).data('id');
+        const $ciudadBtn = $(`.ciudadToggle[data-id="${id}"]`);
+        const nuevoEstado = $ciudadBtn.data('con-consultorio') != '1';
+
+        $.ajax({
+            url: ciudadUrl(id),
+            type: 'POST',
+            contentType: 'application/json',
+            headers: { 'X-CSRFToken': csrf },
+            data: JSON.stringify({ con_consultorio: nuevoEstado }),
+            success: function () {
+                $ciudadBtn.data('con-consultorio', nuevoEstado ? '1' : '0');
+                const nombre = $ciudadBtn.data('nombre') || $ciudadBtn.text().replace(/\s+/g, ' ').trim().split(' ')[0];
+                const icono = nuevoEstado ? ' <i class="fas fa-clinic-medical ms-1" title="Con consultorio"></i>' : '';
+                $ciudadBtn.html(`${nombre}${icono}`);
+                showMessage(`Consultorio ${nuevoEstado ? 'activado' : 'desactivado'}`);
+            }
+        });
+    });
+
+    // Eliminar ciudad
+    $('#ciudadesContainer').on('click', '.ciudadEliminar', function () {
+        const id = $(this).data('id');
+        const nombre = $(this).data('nombre');
+        if (!confirm(`¿Eliminar la ciudad "${nombre}"? Los días asignados a esta ciudad quedarán sin ciudad.`)) return;
+
+        $.ajax({
+            url: eliminarCiudadUrl(id),
+            type: 'POST',
+            contentType: 'application/json',
+            headers: { 'X-CSRFToken': csrf },
+            data: JSON.stringify({}),
+            success: function () {
+                $(`.ciudadWrapper[data-id="${id}"]`).remove();
+                $(`#ciudadHorarioSelect option[value="${id}"]`).remove();
+                $('.diaButton').each(function () {
+                    if (String($(this).data('ciudad')) === String(id)) {
+                        $(this).data('ciudad', '')
+                            .removeClass('btn-primary')
+                            .addClass('btn-outline-secondary');
+                    }
+                });
+                showMessage(`${nombre} eliminada`, 'danger');
+            }
+        });
+    });
+
+    // Crear nueva ciudad
+    $('#btnCrearCiudad').on('click', function () {
+        const nombre = $('#nuevaCiudadInput').val().trim();
+        if (!nombre) return;
+
+        $.ajax({
+            url: crearCiudadUrl,
+            type: 'POST',
+            contentType: 'application/json',
+            headers: { 'X-CSRFToken': csrf },
+            data: JSON.stringify({ nombre }),
+            success: function (response) {
+                renderCiudad(response.ciudad);
+                $('#nuevaCiudadInput').val('');
+                showMessage(`${response.ciudad.nombre} creada`);
             }
         });
     });
