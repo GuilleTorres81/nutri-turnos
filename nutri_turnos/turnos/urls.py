@@ -20,4 +20,5 @@ urlpatterns = [
     path('crear-ciudad/', crear_ciudad, name='crear_ciudad'),
     path('eliminar-ciudad/<int:ciudad_id>/', eliminar_ciudad, name='eliminar_ciudad'),
     path('get-dias-habilitados/', get_dias_habilitados, name='get_dias_habilitados'),
+    path('export-pdf-data/', export_pdf_data, name='export_pdf_data'),
 ]

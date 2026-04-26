@@ -17,12 +17,69 @@ $(document).ready(function () {
                 text: '<i class="fa-regular fa-file-pdf"></i> PDF',
                 className: "btn btn-danger btn-sm",
                 action: function () {
-                    // let params = $.param({
-                    //     comida: $("#filtroComida").val(),
-                    //     casino: $("#filtroCasino").val(),
-                    //     fecha: $("#filtroFecha").val(),
-                    // });
-                    // window.location = "/export/pdf/?" + params;
+                    const pdfUrl = $('#registroTable').data('pdf-url');
+                    const fecha    = $('#filtroFecha').val();
+                    const ciudad   = $('#filtroCiudad').val();
+                    const motivo   = $('#filtroMotivo').val();
+                    const encuentro = $('#filtroEncuentro').val();
+
+                    $.get(pdfUrl, { fecha, ciudad, motivo, encuentro }, function (response) {
+                        const rows = response.data;
+
+                        // Nombre del archivo
+                        const partes = [];
+                        if (fecha)   partes.push(fecha);
+                        if (ciudad)  partes.push(ciudad);
+                        if (motivo)  partes.push(motivo);
+                        const nombreArchivo = partes.length ? `Registro de ${partes.join(' - ')}` : 'Registro de turnos';
+
+                        // Filas de la tabla
+                        const cuerpo = [
+                            [
+                                { text: 'Fecha y Hora', bold: true },
+                                { text: 'Apellido',     bold: true },
+                                { text: 'Nombre',       bold: true },
+                                { text: 'Edad',         bold: true },
+                                { text: 'Teléfono',     bold: true },
+                                { text: 'Email',        bold: true },
+                                { text: 'Ciudad',       bold: true },
+                                { text: 'Motivo',       bold: true },
+                                { text: 'Encuentro',    bold: true },
+                            ],
+                            ...rows.map(r => [
+                                r.fecha_hora,
+                                r.apellido,
+                                r.nombre,
+                                String(r.edad),
+                                r.telefono,
+                                r.email,
+                                r.ciudad,
+                                r.motivo,
+                                r.encuentro,
+                            ])
+                        ];
+
+                        const docDefinition = {
+                            pageOrientation: 'landscape',
+                            content: [
+                                { text: nombreArchivo, style: 'header' },
+                                {
+                                    table: {
+                                        headerRows: 1,
+                                        widths: ['auto','auto','auto','auto','auto','*','auto','*','auto'],
+                                        body: cuerpo,
+                                    },
+                                    layout: 'lightHorizontalLines',
+                                }
+                            ],
+                            styles: {
+                                header: { fontSize: 14, bold: true, margin: [0, 0, 0, 10] }
+                            },
+                            defaultStyle: { fontSize: 8 }
+                        };
+
+                        pdfMake.createPdf(docDefinition).download(`${nombreArchivo}.pdf`);
+                    });
                 },
                 escapeHtml: false,
             },
@@ -30,9 +87,10 @@ $(document).ready(function () {
         ajax: {
             url: url, // Ruta a tu vista de servidor
             data: function (d) {
-                // d.comida = $("#filtroComida").val();
-                // d.casino = $("#filtroCasino").val();
-                d.fecha = $("#filtroFecha").val();
+                d.fecha     = $("#filtroFecha").val();
+                d.ciudad    = $("#filtroCiudad").val();
+                d.motivo    = $("#filtroMotivo").val();
+                d.encuentro = $("#filtroEncuentro").val();
             },
             dataSrc: "data", // nombre del campo que contiene la lista de alarmas
         },
@@ -55,11 +113,7 @@ $(document).ready(function () {
             { data: 
                 "ciudad",
                 render: function (data, type, row) {
-                    if (data === "Tartagal") {
-                        return `<span class="badge bg-success">${data}</span>`;
-                    }else if (data === "Salta") {
-                        return `<span class="badge bg-warning">${data}</span>`;
-                    }
+                    return data ? `<span class="badge bg-secondary">${data}</span>` : '';
                 }
             },
             { data: "motivo" },
@@ -114,8 +168,7 @@ $(document).ready(function () {
     $(".dt-buttons").addClass("d-flex align-items-center justify-content-center gap-2");
     $(".dt-button").removeClass("dt-button");
 
-    // Detectar cambios en los filtros y recargar tabla
-    $("#filtroFecha").on("change", function () {
+    $("#filtroFecha, #filtroCiudad, #filtroMotivo, #filtroEncuentro").on("change", function () {
         dataTable.ajax.reload();
     });
 });

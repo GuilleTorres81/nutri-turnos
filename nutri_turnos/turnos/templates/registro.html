@@ -40,14 +40,32 @@
             <div>
                 <div class="row mb-3">
                     <div class="col-md-3 mb-2 d-flex gap-2">
-                        <input
-                            type="date"
-                            id="filtroFecha"
-                            class="custom-control"
-                        />
+                        <input type="date" id="filtroFecha" class="custom-control"/>
                         <button id="cleanButton" class="btn btn-white btn-sm px-1 py-0 fs-5 d-none fw-bold" title="clear" data-clear><i class="fa-regular fa-circle-xmark"></i></button>
                     </div>
-                    
+                    <div class="col-md-2 mb-2">
+                        <select id="filtroCiudad" class="custom-control">
+                            <option value="">Todas las ciudades</option>
+                            {% for ciudad in ciudades %}
+                                <option value="{{ ciudad.nombre }}">{{ ciudad.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <select id="filtroMotivo" class="custom-control">
+                            <option value="">Todos los motivos</option>
+                            <option value="Plan alimentario">Plan alimentario</option>
+                            <option value="Antropometría">Antropometría</option>
+                            <option value="Bioimpedancia">Bioimpedancia</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <select id="filtroEncuentro" class="custom-control">
+                            <option value="">Todos los encuentros</option>
+                            <option value="Google Meet">Virtual (Meet)</option>
+                            <option value="Consultorio">Consultorio</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div>
@@ -55,6 +73,7 @@
                     id="registroTable"
                     class="table"
                     data-url="{% url 'turnos:datatable' %}"
+                    data-pdf-url="{% url 'turnos:export_pdf_data' %}"
                 >
                     <thead>
                         <tr>

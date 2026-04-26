@@ -63,7 +63,11 @@ def registrar_turno(request):
         email = request.POST.get('email')
         telefono = request.POST.get('telefono')
         edad = request.POST.get('edad')
-        ciudad = request.POST.get('ciudad')
+        ciudad_id = request.POST.get('ciudad')
+        try:
+            ciudad = Ciudad.objects.get(id=ciudad_id).nombre
+        except Ciudad.DoesNotExist:
+            ciudad = ciudad_id
         encuentro = request.POST.get('encuentro')
         motivo = request.POST.get('motivo')
 
@@ -168,8 +172,8 @@ def cancelar_turno(request, turno_id):
 
 @login_required(login_url='turnos:login')
 def registro_de_turnos(request):
-    usuario=request.user        
-    return render(request,"registro.html")
+    ciudades = Ciudad.objects.filter(habilitada=True)
+    return render(request, "registro.html", {'ciudades': ciudades})
 
 def registro_datatable(request):
     draw = request.GET.get('draw')
@@ -181,7 +185,10 @@ def registro_datatable(request):
 
     # filtro_ciudad = request.GET.get('ciudad')
     # filtro_motivo = request.GET.get('motivo')
-    filtro_fecha  = request.GET.get('fecha')
+    filtro_fecha    = request.GET.get('fecha')
+    filtro_ciudad   = request.GET.get('ciudad')
+    filtro_motivo   = request.GET.get('motivo')
+    filtro_encuentro = request.GET.get('encuentro')
     
     fecha_hoy = timezone.localdate()
     inicio_hoy = timezone.make_aware(
@@ -236,7 +243,13 @@ def registro_datatable(request):
             fecha_obj = datetime.strptime(filtro_fecha, "%Y-%m-%d").date()
             filtered_data = filtered_data.filter(fecha_hora__date=fecha_obj)
         except ValueError:
-            print("Formato de fecha inválido:", filtro_fecha)    
+            print("Formato de fecha inválido:", filtro_fecha)
+    if filtro_ciudad:
+        filtered_data = filtered_data.filter(ciudad=filtro_ciudad)
+    if filtro_motivo:
+        filtered_data = filtered_data.filter(motivo=filtro_motivo)
+    if filtro_encuentro:
+        filtered_data = filtered_data.filter(encuentro=filtro_encuentro)
     
         
     filtered_data = filtered_data.order_by(order_column)
@@ -308,6 +321,34 @@ def get_horarios_ajax(request):
         except ValueError:
             return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+def export_pdf_data(request):
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+    inicio_hoy = timezone.make_aware(
+        datetime.combine(timezone.localdate(), datetime.min.time())
+    )
+    qs = Turno.objects.filter(fecha_hora__gte=inicio_hoy)
+
+    fecha    = request.GET.get('fecha')
+    ciudad   = request.GET.get('ciudad')
+    motivo   = request.GET.get('motivo')
+    encuentro = request.GET.get('encuentro')
+
+    if fecha:
+        try:
+            qs = qs.filter(fecha_hora__date=datetime.strptime(fecha, '%Y-%m-%d').date())
+        except ValueError:
+            pass
+    if ciudad:
+        qs = qs.filter(ciudad=ciudad)
+    if motivo:
+        qs = qs.filter(motivo=motivo)
+    if encuentro:
+        qs = qs.filter(encuentro=encuentro)
+
+    return JsonResponse({'data': [t.to_json() for t in qs.order_by('fecha_hora')]})
 
 def get_dias_habilitados(request):
     if request.method != 'GET':
