@@ -10,9 +10,7 @@ $(document).ready(function(){
         disable: [
             function(date) {
             return (
-                    date.getDay() === 0 || // domingo
-                    date.getDay() === 6  // sábado
-
+                    date.getDay() === 0 
                 );
             }
         ],
@@ -32,14 +30,14 @@ $(document).ready(function(){
             }
     }
 
-    $("#filtroFecha").flatpickr(optional_config);
+    const fpFecha = $("#filtroFecha").flatpickr(optional_config);
+    fpFecha.altInput.placeholder = 'Filtrar por fecha';
     $('.flatpickr-months').addClass('rounded');
 
     $("#cleanButton").click(function() {
-        $('#filtroFecha').val('');
-        $('#filtroFecha').flatpickr().clear();
-        $("#filtroFecha").flatpickr(optional_config);
-        $(this).addClass('d-none')
+        fpFecha.clear();
+        fpFecha.altInput.placeholder = 'Filtrar por fecha';
+        $(this).addClass('d-none');
     })
 })
 
